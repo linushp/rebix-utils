@@ -94,7 +94,7 @@ function _createXHR(options) {
         } else {
             status = (xhr.status === 1223 ? 204 : xhr.status)
         }
-        var response = failureResponse
+        var response = failureResponse;
         var err = null;
 
         if (status !== 0){
@@ -129,11 +129,11 @@ function _createXHR(options) {
     var aborted;
     var uri = xhr.url = options.uri || options.url;
     var method = xhr.method = options.method || "GET";
-    var body = options.body || options.data
+    var body = options.body || options.data;
     var headers = xhr.headers = options.headers || {};
-    var sync = !!options.sync
-    var isJson = false
-    var timeoutTimer
+    var sync = !!options.sync;
+    var isJson = false;
+    var timeoutTimer;
     var failureResponse = {
         body: undefined,
         headers: {},
@@ -141,7 +141,7 @@ function _createXHR(options) {
         method: method,
         url: uri,
         rawRequest: xhr
-    }
+    };
 
     if ("json" in options && options.json !== false) {
         isJson = true
@@ -242,5 +242,26 @@ forEachArray(["get", "put", "post", "patch", "head", "delete"], function(method)
         return _createXHR(options)
     }
 });
+
+
+
+
+forEachArray(["get", "put", "post", "patch", "head", "delete"], function(method) {
+    var methodPromise = (method === "delete" ? "del" : method) + "Promise";
+    createXHR[methodPromise] = function (uri, options) {
+        return new Promise(function (resolve, reject) {
+            options = initParams(uri, options, function (err, resp, body) {
+                if (err) {
+                    reject(err, resp, body);
+                } else {
+                    resolve(resp, body);
+                }
+            });
+            options.method = method.toUpperCase();
+            return _createXHR(options);
+        });
+    }
+});
+
 
 module.exports = createXHR;
