@@ -1,7 +1,7 @@
 //CopyFrom: https://github.com/naugtur/xhr
 
 var miniUnderscore = require('./miniUnderscore');
-var parseHeaders = require("./parse-headers");
+var parseHeaders = require("./parseHeaders");
 var StringUtils = require('./StringUtils');
 var isFunction = miniUnderscore.isFunction;
 var xtend = miniUnderscore.extend;

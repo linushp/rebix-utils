@@ -81,7 +81,7 @@ function getQueryParam(paramName, uri) {
 
 function toQueryString(obj) {
     var mm = miniUnderscore.map(obj, function (v, k) {
-        return '' + k + '=' + v;//`${k}=${v}`;
+        return '' + k + '=' + encodeURIComponent(v);//`${k}=${v}`;
     });
     return mm.join('&');
 }
