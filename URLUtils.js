@@ -1,3 +1,5 @@
+var miniUnderscore = require('./miniUnderscore');
+
 /**
  * 解析URL
  * @param str
@@ -76,8 +78,17 @@ function getQueryParam(paramName, uri) {
     return queryMap[paramName];
 }
 
+
+function toQueryString(obj) {
+    var mm = miniUnderscore.map(obj, function (v, k) {
+        return '' + k + '=' + v;//`${k}=${v}`;
+    });
+    return mm.join('&');
+}
+
 module.exports = {
     parseURL: parseURL,
     getQueryParam: getQueryParam,
-    mapQuery: mapQuery
+    mapQuery: mapQuery,
+    toQueryString: toQueryString
 };

@@ -45,6 +45,15 @@ miniUnderscore.each = miniUnderscore.forEach = function(obj, iteratee) {
     return obj;
 };
 
+miniUnderscore.map = function(arr,iteratee){
+    var result = [];
+    miniUnderscore.each(arr,function(value,key){
+        var m = iteratee(value,key);
+        result.push(m);
+    });
+    return result;
+};
+
 // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError.
 miniUnderscore.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'], function(name) {
     miniUnderscore['is' + name] = function(obj) {
