@@ -1,5 +1,5 @@
 
-
+var domainPrefix = window.location.host;
 
 var CookieUtils = {
 
