@@ -43,6 +43,7 @@ function hideStyle(isHide, style) {
 
 
 module.exports = {
-    formatDate: formatDate,
-    getTimeDateBegin: getTimeDateBegin
+    classNames: classNames,
+    showStyle: showStyle,
+    hideStyle: hideStyle
 };
