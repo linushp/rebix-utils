@@ -1,4 +1,4 @@
-//  https://github.com/naugtur/xhr
+//CopyFrom: https://github.com/naugtur/xhr
 
 var miniUnderscore = require('./miniUnderscore');
 var parseHeaders = require("./parse-headers");
