@@ -1,8 +1,9 @@
-
+var mini_ = require('./mini_');
+var assignObject = mini_.assignObject;
 
 var hasOwn = {}.hasOwnProperty;
 
-export function classNames() {
+function classNames() {
     var classes = [];
     for (var i = 0; i < arguments.length; i++) {
         var arg = arguments[i];
@@ -26,22 +27,22 @@ export function classNames() {
 }
 
 
-
-export function showStyle(isShow, style) {
+function showStyle(isShow, style) {
     style = style || {};
-    return {
-        display: isShow ? 'block' : 'none',
-        ...style
-    };
+    return assignObject({display: isShow ? 'block' : 'none'}, style);
 }
 
 
-export function hideStyle(isHide, style) {
+function hideStyle(isHide, style) {
     style = style || {};
-    if(isHide){
+    if (isHide) {
         style['display'] = "none";
     }
     return style;
 }
 
 
+module.exports = {
+    formatDate: formatDate,
+    getTimeDateBegin: getTimeDateBegin
+};

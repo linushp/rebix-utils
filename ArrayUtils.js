@@ -1,4 +1,4 @@
-export function toArray(aaa) {
+function toArray(aaa) {
     if (!aaa) {
         return [];
     }
@@ -7,3 +7,8 @@ export function toArray(aaa) {
     var args = [].concat(argsArray);
     return args;
 }
+
+
+module.exports = {
+    toArray: toArray
+};

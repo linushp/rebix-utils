@@ -1,19 +1,22 @@
-const loadedLibMap = {};
+var loadedLibMap = {};
+
+var NativePromise = Promise;
+
 // 加载指定url的js库, 不会重复加载
 function loadScriptLib(libSrc) {
     if (loadedLibMap[libSrc] != null) {
-        return loadedLibMap[libSrc] ? Promise.resolve() : Promise.reject("Failed to load source: " + libSrc);
+        return loadedLibMap[libSrc] ? NativePromise.resolve() : NativePromise.reject("Failed to load source: " + libSrc);
     } else {
         let scriptNode = document.querySelector("[src=" + libSrc + "]");
         if (!scriptNode) {
             scriptNode = document.createElement('script');
             scriptNode.src = libSrc;
             document.head.appendChild(scriptNode);
-        }else {
-            return Promise.resolve();
+        } else {
+            return NativePromise.resolve();
         }
 
-        return new Promise(function (resolve, reject) {
+        return new NativePromise(function (resolve, reject) {
 
             var onload = function () {
                 scriptNode.removeEventListener('load', onload);
@@ -34,5 +37,6 @@ function loadScriptLib(libSrc) {
 }
 
 
-module.exports = parseURL;
-
+module.exports = {
+    loadScriptLib: loadScriptLib
+};

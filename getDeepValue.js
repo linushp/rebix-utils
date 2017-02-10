@@ -1,3 +1,63 @@
+var mini_ = require('./mini_');
+
+var _undefined = undefined;
+var isFunction = mini_.isFunction;
+
+
+function getValueByKey(obj, key) {
+    if (!obj) {
+        return null;
+    }
+    var value = _undefined;
+    if (isFunction(obj.get)) {
+        value = obj.get(key);
+    }
+    if (value === _undefined) {
+        value = obj[key];
+    }
+
+    return value;
+}
+
+
 /**
- * Created by luanhaipeng on 17/2/10.
+ * a = {
+ *   b:{
+ *      c:{
+ *          d:1
+ *      }
+ *   }
+ * }
+ *
+ * str : b.c.d
+ * @param obj
+ * @param str
+ * @demo :
+ *  var d = getObjectValue(a,'b.c.d');
  */
+function getValueInPath(obj, str) {
+    if (!obj) {
+        return null;
+    }
+    try {
+        var propArr = str.split(".");
+        var tmpObj = obj;
+        var i = 0;
+        while (i < propArr.length) {
+            if (!tmpObj) {
+                return null;
+            }
+            var prop = propArr[i];
+            tmpObj = getValueByKey(tmpObj, prop);
+            i++;
+        }
+        return tmpObj;
+    } catch (e) {
+        console.log('[ERROR]', e);
+    }
+
+    return null;
+}
+
+
+module.exports = getValueInPath;
