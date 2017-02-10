@@ -1,7 +1,7 @@
-var mini_ = require('./mini_');
+var miniUnderscore = require('./miniUnderscore');
 
 var _undefined = undefined;
-var isFunction = mini_.isFunction;
+var isFunction = miniUnderscore.isFunction;
 
 
 function getValueByKey(obj, key) {

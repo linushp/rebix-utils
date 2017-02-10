@@ -1,5 +1,5 @@
-var mini_ = require('./mini_');
-var assignObject = mini_.assignObject;
+var miniUnderscore = require('./miniUnderscore');
+var assignObject = miniUnderscore.assignObject;
 
 var hasOwn = {}.hasOwnProperty;
 

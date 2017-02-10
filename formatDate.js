@@ -1,3 +1,6 @@
+
+
+
 /**
  // ("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
  // ("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
@@ -19,23 +22,5 @@ function formatDate(date, fmt) {
 }
 
 
-/**
- * 获取一天中的开始时间
- * @param date
- * @returns {*}
- */
-function getTimeDateBegin(date) {
-    if (!date) {
-        return null;
-    }
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    return date.getTime();
-}
 
-
-module.exports = {
-    formatDate: formatDate,
-    getTimeDateBegin: getTimeDateBegin
-};
+module.exports = formatDate;
