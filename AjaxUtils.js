@@ -20,10 +20,10 @@ function isEmpty(obj){
 }
 
 function initParams(uri, options, callback) {
-    var params = uri
+    var params = uri;
 
     if (isFunction(options)) {
-        callback = options
+        callback = options;
         if (typeof uri === "string") {
             params = {uri:uri}
         }
@@ -31,7 +31,7 @@ function initParams(uri, options, callback) {
         params = xtend(options, {uri: uri})
     }
 
-    params.callback = callback
+    params.callback = callback;
     return params
 }
 
@@ -85,8 +85,8 @@ function _createXHR(options) {
 
     // will load the data & process the response in a special response object
     function loadFunc() {
-        if (aborted) return
-        var status
+        if (aborted) return;
+        var status;
         clearTimeout(timeoutTimer);
         if(options.useXDR && xhr.status===undefined) {
             //IE8 CORS GET successful response doesn't have a status field, but body is fine
@@ -107,7 +107,7 @@ function _createXHR(options) {
                 rawRequest: xhr
             };
             if(xhr.getAllResponseHeaders){ //remember xhr can in fact be XDR for CORS in IE
-                response.headers = parseHeaders(xhr.getAllResponseHeaders())
+                response.headers = parseHeaders(xhr.getAllResponseHeaders());
             }
         } else {
             err = new Error("Internal XMLHttpRequest Error")
@@ -158,11 +158,11 @@ function _createXHR(options) {
     // IE9 must have onprogress be set to a unique function.
     xhr.onprogress = function () {
         // IE must die
-    }
+    };
     xhr.onabort = function(){
         aborted = true;
-    }
-    xhr.ontimeout = errorFunc
+    };
+    xhr.ontimeout = errorFunc;
     xhr.open(method, uri, !sync, options.username, options.password);
     //has to be after open
     if(!sync) {
@@ -233,7 +233,7 @@ function createXHR(uri, options, callback) {
 }
 
 createXHR.XMLHttpRequest = window.XMLHttpRequest || noop;
-createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest()) ? createXHR.XMLHttpRequest : window.XDomainRequest
+createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest()) ? createXHR.XMLHttpRequest : window.XDomainRequest;
 
 forEachArray(["get", "put", "post", "patch", "head", "delete"], function(method) {
     createXHR[method === "delete" ? "del" : method] = function(uri, options, callback) {
