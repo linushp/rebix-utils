@@ -8,7 +8,7 @@ function loadShimES6Promise(callback) {
     } else {
         setTimeout(function () {
             callback();
-        },1);
+        }, 1);
     }
 }
 

@@ -1,36 +1,35 @@
-
 var miniUnderscore = {};
 
 var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
 
-var property = function(key) {
-    return function(obj) {
+var property = function (key) {
+    return function (obj) {
         return obj == null ? void 0 : obj[key];
     };
 };
 
-var getLength          = property('length');
-var toString           = Object.prototype.toString;
-var nativeIsArray      = Array.isArray;
-var nativeKeys         = Object.keys;
+var getLength = property('length');
+var toString = Object.prototype.toString;
+var nativeIsArray = Array.isArray;
+var nativeKeys = Object.keys;
 
-miniUnderscore.isArrayLike = function(collection) {
+miniUnderscore.isArrayLike = function (collection) {
     var length = getLength(collection);
     return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
 };
 
 // Delegates to ECMA5's native Array.isArray
-miniUnderscore.isArray = nativeIsArray || function(obj) {
+miniUnderscore.isArray = nativeIsArray || function (obj) {
         return toString.call(obj) === '[object Array]';
     };
 
 // Is a given variable an object?
-miniUnderscore.isObject = function(obj) {
+miniUnderscore.isObject = function (obj) {
     var type = typeof obj;
     return type === 'function' || type === 'object' && !!obj;
 };
 
-miniUnderscore.each = miniUnderscore.forEach = function(obj, iteratee) {
+miniUnderscore.each = miniUnderscore.forEach = function (obj, iteratee) {
     var i, length;
     if (miniUnderscore.isArrayLike(obj)) {
         for (i = 0, length = obj.length; i < length; i++) {
@@ -45,25 +44,25 @@ miniUnderscore.each = miniUnderscore.forEach = function(obj, iteratee) {
     return obj;
 };
 
-miniUnderscore.map = function(arr,iteratee){
+miniUnderscore.map = function (arr, iteratee) {
     var result = [];
-    miniUnderscore.each(arr,function(value,key){
-        var m = iteratee(value,key);
+    miniUnderscore.each(arr, function (value, key) {
+        var m = iteratee(value, key);
         result.push(m);
     });
     return result;
 };
 
 // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError.
-miniUnderscore.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'], function(name) {
-    miniUnderscore['is' + name] = function(obj) {
+miniUnderscore.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'], function (name) {
+    miniUnderscore['is' + name] = function (obj) {
         return toString.call(obj) === '[object ' + name + ']';
     };
 });
 
 // An internal function for creating assigner functions.
-var createAssigner = function(keysFunc, undefinedOnly) {
-    return function(obj) {
+var createAssigner = function (keysFunc, undefinedOnly) {
+    return function (obj) {
         var length = arguments.length;
         if (length < 2 || obj == null) return obj;
         for (var index = 1; index < length; index++) {
@@ -79,6 +78,6 @@ var createAssigner = function(keysFunc, undefinedOnly) {
     };
 };
 
-miniUnderscore.assignObject = miniUnderscore.extend = createAssigner(nativeKeys,false);
+miniUnderscore.assignObject = miniUnderscore.extend = createAssigner(nativeKeys, false);
 
 module.exports = miniUnderscore;

@@ -1,5 +1,3 @@
-
-
 /**
  * @memberOf format
  * @method number

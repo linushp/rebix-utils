@@ -2,7 +2,7 @@
 
 var miniUnderscore = require('./miniUnderscore');
 var parseHeaders = require("./parseHeaders");
-var StringUtils = require('./StringUtils');
+var upFirstChar = require('./StringUtils/upFirstChar');
 var isFunction = miniUnderscore.isFunction;
 var xtend = miniUnderscore.extend;
 
@@ -241,10 +241,13 @@ var AjaxUtils = {};
 
 forEachArray(["get", "put", "post", "patch", "head", "delete"], function (method) {
 
-    //AjaxUtils.del('/user',function(){});
-    //AjaxUtils.get('/user',function(){});
-    //AjaxUtils.post('/user',function(){});
-    AjaxUtils[method === "delete" ? "del" : method] = function (uri, options, callback) {
+    //AjaxUtils.ajaxDel('/user',function(){});
+    //AjaxUtils.ajaxGet('/user',function(){});
+    //AjaxUtils.ajaxPost('/user',function(){});
+
+    var ajaxMethod = "ajax" + upFirstChar(method);
+
+    AjaxUtils[ajaxMethod] = function (uri, options, callback) {
         options = initParams(uri, options, callback);
         options.method = method.toUpperCase();
         return _createXHR(options)
@@ -253,11 +256,9 @@ forEachArray(["get", "put", "post", "patch", "head", "delete"], function (method
 });
 
 
-
-
 forEachArray(["get", "put", "post", "patch", "head", "delete"], function (method) {
 
-    var methodPromise = "send" + StringUtils.upFirstChar(method) + "Request";
+    var methodPromise = "send" + upFirstChar(method) + "Request";
 
     //AjaxUtil.sendGetRequest('/user/31').then(function(){});
     //AjaxUtil.sendPostRequest('/user/31',{json:{name:'hello'}}).then(function(){});

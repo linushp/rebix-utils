@@ -1,4 +1,3 @@
-
 var getElementsByTagName = document.getElementsByTagName;
 var createElement = document.createElement;
 

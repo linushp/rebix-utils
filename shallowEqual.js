@@ -1,5 +1,3 @@
-
-
 function shallowEqual(objA, objB) {
     if (objA === objB) {
         return true;
