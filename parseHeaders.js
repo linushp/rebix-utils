@@ -1,5 +1,5 @@
 var miniUnderscore = require('./miniUnderscore');
-var StringTrims = require('./StringUtils/trim');
+var StringTrims = require('./StringUtils/StringUtils');
 
 var trim = StringTrims.trim;
 var forEach = miniUnderscore.each;

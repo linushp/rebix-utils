@@ -240,11 +240,9 @@ createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest())
 var AjaxUtils = {};
 
 forEachArray(["get", "put", "post", "patch", "head", "delete"], function (method) {
-
-    //AjaxUtils.ajaxDel('/user',function(){});
+    //AjaxUtils.ajaxDel('/user',options,function(){});
     //AjaxUtils.ajaxGet('/user',function(){});
     //AjaxUtils.ajaxPost('/user',function(){});
-
     var ajaxMethod = "ajax" + upFirstChar(method);
 
     AjaxUtils[ajaxMethod] = function (uri, options, callback) {
@@ -256,10 +254,26 @@ forEachArray(["get", "put", "post", "patch", "head", "delete"], function (method
 });
 
 
+
+function sendRequest(options){
+    return new Promise(function (resolve, reject) {
+        options = options || {}; //保证options一定会存在
+        var uri = options.uri || options.url;
+        options = initParams(uri, options, function (err, resp, body) {
+            if (err) {
+                reject(err, resp, body);
+            } else {
+                resolve(resp, body);
+            }
+        });
+        options.method = method.toUpperCase();
+        return _createXHR(options);
+    });
+}
+
 forEachArray(["get", "put", "post", "patch", "head", "delete"], function (method) {
 
     var methodPromise = "send" + upFirstChar(method) + "Request";
-
     //AjaxUtil.sendGetRequest('/user/31').then(function(){});
     //AjaxUtil.sendPostRequest('/user/31',{json:{name:'hello'}}).then(function(){});
     //AjaxUtil.sendPutRequest('/user/31',{json:{name:'hello'}}).then(function(){});
@@ -268,23 +282,16 @@ forEachArray(["get", "put", "post", "patch", "head", "delete"], function (method
     //AjaxUtil.sendHeadRequest('/user/31').then(function(){});
 
     AjaxUtils[methodPromise] = function (uri, options) {
-        return new Promise(function (resolve, reject) {
-            options = options || {}; //保证options一定会存在
-            options = initParams(uri, options, function (err, resp, body) {
-                if (err) {
-                    reject(err, resp, body);
-                } else {
-                    resolve(resp, body);
-                }
-            });
-            options.method = method.toUpperCase();
-            return _createXHR(options);
-        });
+        options = options || {}; //保证options一定会存在
+        options.uri = uri;
+        return sendRequest(options);
     }
+
 });
 
 
 AjaxUtils.ajax = _createXHR;
 AjaxUtils.createXHR = createXHR;
+AjaxUtils.sendRequest = sendRequest;
 
 module.exports = AjaxUtils;
