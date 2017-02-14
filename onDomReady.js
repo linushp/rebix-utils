@@ -7,7 +7,7 @@ function onDomReady(callback) {
     function DOMContentLoaded() {
         //保证只会被调用一次
         if (!callbackCalled) {
-            window.setTimeout(function () {
+            setTimeout(function () {
                 callback();
             }, 2);
             callbackCalled = true;

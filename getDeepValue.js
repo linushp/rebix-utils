@@ -6,7 +6,7 @@ var isFunction = miniUnderscore.isFunction;
 
 function getValueByKey(obj, key) {
     if (!obj) {
-        return null;
+        return _undefined;
     }
     var value = _undefined;
     if (isFunction(obj.get)) {
@@ -37,7 +37,7 @@ function getValueByKey(obj, key) {
  */
 function getValueInPath(obj, str) {
     if (!obj) {
-        return null;
+        return _undefined;
     }
     try {
         var propArr = str.split(".");
@@ -45,7 +45,7 @@ function getValueInPath(obj, str) {
         var i = 0;
         while (i < propArr.length) {
             if (!tmpObj) {
-                return null;
+                return tmpObj;
             }
             var prop = propArr[i];
             tmpObj = getValueByKey(tmpObj, prop);
@@ -56,7 +56,7 @@ function getValueInPath(obj, str) {
         console.log('[ERROR]', e);
     }
 
-    return null;
+    return _undefined;
 }
 
 
