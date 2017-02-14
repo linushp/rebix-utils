@@ -13,13 +13,13 @@ var toString = Object.prototype.toString;
 var nativeIsArray = Array.isArray;
 var nativeKeys = Object.keys;
 
-miniUnderscore.isArrayLike = function (collection) {
+var isArrayLike = miniUnderscore.isArrayLike = function (collection) {
     var length = getLength(collection);
     return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
 };
 
 // Delegates to ECMA5's native Array.isArray
-miniUnderscore.isArray = nativeIsArray || function (obj) {
+var isArray = miniUnderscore.isArray = nativeIsArray || function (obj) {
         return toString.call(obj) === '[object Array]';
     };
 
@@ -29,9 +29,9 @@ miniUnderscore.isObject = function (obj) {
     return type === 'function' || type === 'object' && !!obj;
 };
 
-miniUnderscore.each = miniUnderscore.forEach = function (obj, iteratee) {
+var forEach = miniUnderscore.each = miniUnderscore.forEach = function (obj, iteratee) {
     var i, length;
-    if (miniUnderscore.isArrayLike(obj)) {
+    if (isArrayLike(obj)) {
         for (i = 0, length = obj.length; i < length; i++) {
             iteratee(obj[i], i, obj);
         }
@@ -46,7 +46,7 @@ miniUnderscore.each = miniUnderscore.forEach = function (obj, iteratee) {
 
 miniUnderscore.map = function (arr, iteratee) {
     var result = [];
-    miniUnderscore.each(arr, function (value, key) {
+    forEach(arr, function (value, key) {
         var m = iteratee(value, key);
         result.push(m);
     });
@@ -78,6 +78,14 @@ var createAssigner = function (keysFunc, undefinedOnly) {
     };
 };
 
-miniUnderscore.assignObject = miniUnderscore.extend = createAssigner(nativeKeys, false);
+miniUnderscore.defaults = createAssigner(nativeKeys, true);
+miniUnderscore.assignObject = miniUnderscore.extend = miniUnderscore.assign = createAssigner(nativeKeys, false);
+
+
+miniUnderscore.isEmpty = function(obj) {
+    if (obj == null) return true;
+    if (isArrayLike(obj) && (isArray(obj) || miniUnderscore.isString(obj) || miniUnderscore.isArguments(obj))) return obj.length === 0;
+    return nativeKeys(obj).length === 0;
+};
 
 module.exports = miniUnderscore;

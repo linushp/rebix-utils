@@ -1,5 +1,5 @@
 var camelCase = require('./camelCase');
-var fromCamelCase = require('./fromCamelCase');
+var deCamelCase = require('./deCamelCase');
 var slash = require('./slash');
 var upFirstChar = require('./upFirstChar');
 
@@ -29,7 +29,7 @@ module.exports = {
     startWith: startWith,
 
     camelCase: camelCase,
-    fromCamelCase: fromCamelCase,
+    deCamelCase: deCamelCase,
     slash: slash,
     upFirstChar: upFirstChar
 };
