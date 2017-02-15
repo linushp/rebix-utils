@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -98,13 +98,13 @@ var toString = Object.prototype.toString;
 var nativeIsArray = Array.isArray;
 var nativeKeys = Object.keys;
 
-miniUnderscore.isArrayLike = function (collection) {
+var isArrayLike = miniUnderscore.isArrayLike = function (collection) {
     var length = getLength(collection);
     return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
 };
 
 // Delegates to ECMA5's native Array.isArray
-miniUnderscore.isArray = nativeIsArray || function (obj) {
+var isArray = miniUnderscore.isArray = nativeIsArray || function (obj) {
     return toString.call(obj) === '[object Array]';
 };
 
@@ -114,9 +114,9 @@ miniUnderscore.isObject = function (obj) {
     return type === 'function' || type === 'object' && !!obj;
 };
 
-miniUnderscore.each = miniUnderscore.forEach = function (obj, iteratee) {
+var forEach = miniUnderscore.each = miniUnderscore.forEach = function (obj, iteratee) {
     var i, length;
-    if (miniUnderscore.isArrayLike(obj)) {
+    if (isArrayLike(obj)) {
         for (i = 0, length = obj.length; i < length; i++) {
             iteratee(obj[i], i, obj);
         }
@@ -131,7 +131,7 @@ miniUnderscore.each = miniUnderscore.forEach = function (obj, iteratee) {
 
 miniUnderscore.map = function (arr, iteratee) {
     var result = [];
-    miniUnderscore.each(arr, function (value, key) {
+    forEach(arr, function (value, key) {
         var m = iteratee(value, key);
         result.push(m);
     });
@@ -163,7 +163,14 @@ var createAssigner = function createAssigner(keysFunc, undefinedOnly) {
     };
 };
 
-miniUnderscore.assignObject = miniUnderscore.extend = createAssigner(nativeKeys, false);
+miniUnderscore.defaults = createAssigner(nativeKeys, true);
+miniUnderscore.assignObject = miniUnderscore.extend = miniUnderscore.assign = createAssigner(nativeKeys, false);
+
+miniUnderscore.isEmpty = function (obj) {
+    if (obj == null) return true;
+    if (isArrayLike(obj) && (isArray(obj) || miniUnderscore.isString(obj) || miniUnderscore.isArguments(obj))) return obj.length === 0;
+    return nativeKeys(obj).length === 0;
+};
 
 module.exports = miniUnderscore;
 
@@ -174,9 +181,9 @@ module.exports = miniUnderscore;
 "use strict";
 
 
-var camelCase = __webpack_require__(19);
-var fromCamelCase = __webpack_require__(20);
-var slash = __webpack_require__(21);
+var camelCase = __webpack_require__(20);
+var deCamelCase = __webpack_require__(21);
+var slash = __webpack_require__(22);
 var upFirstChar = __webpack_require__(3);
 
 function trim(str) {
@@ -204,7 +211,7 @@ module.exports = {
     startWith: startWith,
 
     camelCase: camelCase,
-    fromCamelCase: fromCamelCase,
+    deCamelCase: deCamelCase,
     slash: slash,
     upFirstChar: upFirstChar
 };
@@ -315,7 +322,7 @@ module.exports = upFirstChar;
 
 
 var miniUnderscore = __webpack_require__(0);
-var parseHeaders = __webpack_require__(22);
+var parseHeaders = __webpack_require__(23);
 var upFirstChar = __webpack_require__(3);
 var isFunction = miniUnderscore.isFunction;
 var xtend = miniUnderscore.extend;
@@ -800,6 +807,68 @@ module.exports = {
 "use strict";
 
 
+var CONST_NULL = null;
+
+var _lastServerTimestamp = '_lastServerTimestamp';
+var _lastClientTimestamp = '_lastClientTimestamp';
+
+function ServerTimeClass() {
+    var that = this;
+    that[_lastServerTimestamp] = CONST_NULL;
+    that[_lastClientTimestamp] = CONST_NULL;
+}
+
+var ServerTimeClassPrototype = ServerTimeClass.prototype;
+
+ServerTimeClassPrototype.updateServerTime = function (serverTimestamp) {
+    var that = this;
+    that[_lastServerTimestamp] = serverTimestamp;
+    that[_lastClientTimestamp] = new Date().getTime();
+};
+
+ServerTimeClassPrototype.getServerTimeNow = function () {
+    var clientNow = new Date().getTime();
+    var that = this;
+    if (!that[_lastServerTimestamp]) {
+        return clientNow;
+    }
+    return clientNow + that[_lastServerTimestamp] - that[_lastClientTimestamp];
+};
+
+//YYYY-MM-dd hh:mm:ss
+var timeMap = {
+    ms: 1,
+    s: 1000,
+    m: 1000 * 60,
+    h: 1000 * 60 * 60,
+    d: 1000 * 60 * 60 * 24,
+    M: 2628000000, //1000 * 60 * 60 * 24 * (365 / 12)
+    Y: 1000 * 60 * 60 * 24 * 365
+};
+
+function getTimeAfter(timestamp, count, unit) {
+    var ds = timeMap[unit];
+    return timestamp + count * ds;
+}
+
+function getDateAfter(date, count, unit) {
+    return new Date(getTimeAfter(date.getTime(), count, unit));
+}
+
+module.exports = {
+    ServerTimeClass: ServerTimeClass,
+    ServerTimeUtils: new ServerTimeClass(),
+    getTimeAfter: getTimeAfter,
+    getDateAfter: getDateAfter
+};
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var miniUnderscore = __webpack_require__(0);
 
 /**
@@ -893,7 +962,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -939,7 +1008,7 @@ var formatDate = function formatDate(date, formatString) {
 module.exports = formatDate;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1008,7 +1077,7 @@ function formatDatePretty(timeStr, nowTime0) {
 module.exports = formatDatePretty;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1085,7 +1154,7 @@ var formatNumber = function formatNumber(num, pattern) {
 module.exports = formatNumber;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1098,7 +1167,7 @@ var isFunction = miniUnderscore.isFunction;
 
 function getValueByKey(obj, key) {
     if (!obj) {
-        return null;
+        return _undefined;
     }
     var value = _undefined;
     if (isFunction(obj.get)) {
@@ -1128,7 +1197,7 @@ function getValueByKey(obj, key) {
  */
 function getValueInPath(obj, str) {
     if (!obj) {
-        return null;
+        return _undefined;
     }
     try {
         var propArr = str.split(".");
@@ -1136,7 +1205,7 @@ function getValueInPath(obj, str) {
         var i = 0;
         while (i < propArr.length) {
             if (!tmpObj) {
-                return null;
+                return tmpObj;
             }
             var prop = propArr[i];
             tmpObj = getValueByKey(tmpObj, prop);
@@ -1147,13 +1216,13 @@ function getValueInPath(obj, str) {
         console.log('[ERROR]', e);
     }
 
-    return null;
+    return _undefined;
 }
 
 module.exports = getValueInPath;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1164,7 +1233,7 @@ module.exports = function getRandomNumber(min, max) {
 };
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1177,7 +1246,7 @@ function isPromise(p) {
 module.exports = isPromise;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1200,7 +1269,7 @@ function loadShimES6Promise(callback) {
 module.exports = loadShimES6Promise;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1215,7 +1284,7 @@ function onDomReady(callback) {
     function DOMContentLoaded() {
         //保证只会被调用一次
         if (!callbackCalled) {
-            window.setTimeout(function () {
+            setTimeout(function () {
                 callback();
             }, 2);
             callbackCalled = true;
@@ -1251,7 +1320,7 @@ function onDomReady(callback) {
 module.exports = onDomReady;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1287,7 +1356,7 @@ function shallowEqual(objA, objB) {
 module.exports = shallowEqual;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1320,7 +1389,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1342,7 +1411,7 @@ function fromCamelCase(string, join) {
 module.exports = fromCamelCase;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1406,7 +1475,7 @@ module.exports = function (str) {
 // MIT © [Sindre Sorhus](http://sindresorhus.com)
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1442,7 +1511,7 @@ module.exports = function (headers) {
 };
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1452,20 +1521,21 @@ var AjaxUtils = __webpack_require__(4);
 var ArrayUtils = __webpack_require__(5);
 var CookieUtils = __webpack_require__(6);
 var EventBus = __webpack_require__(7);
-var formatDate = __webpack_require__(10);
-var formatDatePretty = __webpack_require__(11);
-var formatNumber = __webpack_require__(12);
-var getDeepValue = __webpack_require__(13);
-var getRandomNum = __webpack_require__(14);
-var isPromise = __webpack_require__(15);
+var formatDate = __webpack_require__(11);
+var formatDatePretty = __webpack_require__(12);
+var formatNumber = __webpack_require__(13);
+var getDeepValue = __webpack_require__(14);
+var getRandomNum = __webpack_require__(15);
+var isPromise = __webpack_require__(16);
 var JSXRenderUtils = __webpack_require__(8);
-var loadPromiseShim = __webpack_require__(16);
+var loadPromiseShim = __webpack_require__(17);
 var loadStaticUtils = __webpack_require__(2);
 var miniUnderscore = __webpack_require__(0);
-var onDomReady = __webpack_require__(17);
-var shallowEqual = __webpack_require__(18);
-var URLUtils = __webpack_require__(9);
+var onDomReady = __webpack_require__(18);
+var shallowEqual = __webpack_require__(19);
+var URLUtils = __webpack_require__(10);
 var StringUtils = __webpack_require__(1);
+var TimeUtils = __webpack_require__(9);
 
 var exportObject = {};
 function mergeExport(exportObj) {
@@ -1474,14 +1544,15 @@ function mergeExport(exportObj) {
 
 mergeExport(AjaxUtils);
 mergeExport(ArrayUtils);
-mergeExport(EventBus);
 mergeExport(URLUtils);
 mergeExport(JSXRenderUtils);
 mergeExport(StringUtils);
 mergeExport(loadStaticUtils);
 mergeExport(miniUnderscore);
+mergeExport(TimeUtils);
 
 mergeExport({
+    EventBus: EventBus,
     CookieUtils: CookieUtils,
     formatDate: formatDate,
     formatDatePretty: formatDatePretty,

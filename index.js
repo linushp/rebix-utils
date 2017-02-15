@@ -16,6 +16,7 @@ var onDomReady = require('./onDomReady');
 var shallowEqual = require('./shallowEqual');
 var URLUtils = require('./URLUtils');
 var StringUtils = require('./StringUtils/StringUtils');
+var TimeUtils = require('./TimeUtils');
 
 
 var exportObject = {};
@@ -25,14 +26,15 @@ function mergeExport(exportObj) {
 
 mergeExport(AjaxUtils);
 mergeExport(ArrayUtils);
-mergeExport(EventBus);
 mergeExport(URLUtils);
 mergeExport(JSXRenderUtils);
 mergeExport(StringUtils);
 mergeExport(loadStaticUtils);
 mergeExport(miniUnderscore);
+mergeExport(TimeUtils);
 
 mergeExport({
+    EventBus: EventBus,
     CookieUtils: CookieUtils,
     formatDate: formatDate,
     formatDatePretty: formatDatePretty,
