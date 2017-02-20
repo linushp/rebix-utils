@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 24);
+/******/ 	return __webpack_require__(__webpack_require__.s = 25);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -181,9 +181,9 @@ module.exports = miniUnderscore;
 "use strict";
 
 
-var camelCase = __webpack_require__(20);
-var deCamelCase = __webpack_require__(21);
-var slash = __webpack_require__(22);
+var camelCase = __webpack_require__(21);
+var deCamelCase = __webpack_require__(22);
+var slash = __webpack_require__(23);
 var upFirstChar = __webpack_require__(3);
 
 function trim(str) {
@@ -322,7 +322,7 @@ module.exports = upFirstChar;
 
 
 var miniUnderscore = __webpack_require__(0);
-var parseHeaders = __webpack_require__(23);
+var parseHeaders = __webpack_require__(24);
 var upFirstChar = __webpack_require__(3);
 var isFunction = miniUnderscore.isFunction;
 var xtend = miniUnderscore.extend;
@@ -1226,6 +1226,60 @@ module.exports = getValueInPath;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/**
+ * 计算图片的宽度和高度,限定最大宽度和最大高度.
+ * @param maxWidth
+ * @param maxHeight
+ * @param sWidth
+ * @param sHeight
+ * @returns {*}
+ */
+
+
+module.exports = function getMediaSize(maxWidth, maxHeight, sWidth, sHeight) {
+    var width = 100;
+    var height = 100;
+    var scale = 0;
+
+    if (sHeight <= maxHeight && sWidth <= maxWidth) {
+        return { width: sWidth, height: sHeight };
+    }
+
+    if (sHeight <= maxHeight && sWidth > maxWidth) {
+        width = maxWidth;
+        scale = sWidth / maxWidth; //> 1
+        height = sHeight / scale;
+    }
+
+    if (sHeight > maxHeight && sWidth <= maxWidth) {
+        height = maxHeight;
+        scale = sHeight / maxHeight; //>1
+        width = sWidth / scale;
+    }
+
+    if (sHeight > maxHeight && sWidth > maxWidth) {
+        height = maxHeight;
+        scale = sHeight / maxHeight; //>1
+        sWidth = sWidth / scale;
+        width = sWidth;
+
+        if (sHeight <= maxHeight && sWidth > maxWidth) {
+            width = maxWidth;
+            scale = sWidth / maxWidth; //> 1
+            height = sHeight / scale;
+        }
+    }
+
+    width = Math.round(width);
+    height = Math.round(height);
+    return { width: width, height: height };
+};
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
 module.exports = function getRandomNumber(min, max) {
@@ -1233,7 +1287,7 @@ module.exports = function getRandomNumber(min, max) {
 };
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1246,7 +1300,7 @@ function isPromise(p) {
 module.exports = isPromise;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1269,7 +1323,7 @@ function loadShimES6Promise(callback) {
 module.exports = loadShimES6Promise;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1320,7 +1374,7 @@ function onDomReady(callback) {
 module.exports = onDomReady;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1356,7 +1410,7 @@ function shallowEqual(objA, objB) {
 module.exports = shallowEqual;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1389,7 +1443,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1411,7 +1465,7 @@ function fromCamelCase(string, join) {
 module.exports = fromCamelCase;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1475,7 +1529,7 @@ module.exports = function (str) {
 // MIT © [Sindre Sorhus](http://sindresorhus.com)
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1511,7 +1565,7 @@ module.exports = function (headers) {
 };
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1525,14 +1579,15 @@ var formatDate = __webpack_require__(11);
 var formatDatePretty = __webpack_require__(12);
 var formatNumber = __webpack_require__(13);
 var getDeepValue = __webpack_require__(14);
-var getRandomNum = __webpack_require__(15);
-var isPromise = __webpack_require__(16);
+var getRandomNum = __webpack_require__(16);
+var getMediaWidthHeight = __webpack_require__(15);
+var isPromise = __webpack_require__(17);
 var JSXRenderUtils = __webpack_require__(8);
-var loadPromiseShim = __webpack_require__(17);
+var loadPromiseShim = __webpack_require__(18);
 var loadStaticUtils = __webpack_require__(2);
 var miniUnderscore = __webpack_require__(0);
-var onDomReady = __webpack_require__(18);
-var shallowEqual = __webpack_require__(19);
+var onDomReady = __webpack_require__(19);
+var shallowEqual = __webpack_require__(20);
 var URLUtils = __webpack_require__(10);
 var StringUtils = __webpack_require__(1);
 var TimeUtils = __webpack_require__(9);
@@ -1559,6 +1614,7 @@ mergeExport({
     formatNumber: formatNumber,
     getDeepValue: getDeepValue,
     getRandomNum: getRandomNum,
+    getMediaWidthHeight: getMediaWidthHeight,
     isPromise: isPromise,
     loadPromiseShim: loadPromiseShim,
     onDomReady: onDomReady,
