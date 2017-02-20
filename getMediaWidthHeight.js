@@ -32,15 +32,14 @@ module.exports  = function getMediaSize(maxWidth,maxHeight,sWidth,sHeight){
         scale = sHeight / maxHeight;//>1
         sWidth = sWidth / scale;
         width = sWidth;
+    }
 
-        if (sHeight <= maxHeight && sWidth > maxWidth) {
-            width = maxWidth;
-            scale = sWidth / maxWidth; //> 1
-            height = sHeight / scale;
-        }
+    if(width > maxWidth || height > maxHeight){
+        return getMediaSize(maxWidth,maxHeight,width,height);
     }
 
     width = Math.round(width);
     height = Math.round(height);
-    return {width:width, height:height}
+
+    return {width: width, height:height};
 };

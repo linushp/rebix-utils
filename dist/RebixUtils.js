@@ -1236,43 +1236,58 @@ module.exports = getValueInPath;
  */
 
 
-module.exports = function getMediaSize(maxWidth, maxHeight, sWidth, sHeight) {
-    var width = 100;
-    var height = 100;
-    var scale = 0;
+module.exports = function getMediaSize(_x, _x2, _x3, _x4) {
+    var _again = true;
 
-    if (sHeight <= maxHeight && sWidth <= maxWidth) {
-        return { width: sWidth, height: sHeight };
-    }
+    _function: while (_again) {
+        var maxWidth = _x,
+            maxHeight = _x2,
+            sWidth = _x3,
+            sHeight = _x4;
+        _again = false;
 
-    if (sHeight <= maxHeight && sWidth > maxWidth) {
-        width = maxWidth;
-        scale = sWidth / maxWidth; //> 1
-        height = sHeight / scale;
-    }
+        var width = 100;
+        var height = 100;
+        var scale = 0;
 
-    if (sHeight > maxHeight && sWidth <= maxWidth) {
-        height = maxHeight;
-        scale = sHeight / maxHeight; //>1
-        width = sWidth / scale;
-    }
-
-    if (sHeight > maxHeight && sWidth > maxWidth) {
-        height = maxHeight;
-        scale = sHeight / maxHeight; //>1
-        sWidth = sWidth / scale;
-        width = sWidth;
+        if (sHeight <= maxHeight && sWidth <= maxWidth) {
+            return { width: sWidth, height: sHeight };
+        }
 
         if (sHeight <= maxHeight && sWidth > maxWidth) {
             width = maxWidth;
             scale = sWidth / maxWidth; //> 1
             height = sHeight / scale;
         }
-    }
 
-    width = Math.round(width);
-    height = Math.round(height);
-    return { width: width, height: height };
+        if (sHeight > maxHeight && sWidth <= maxWidth) {
+            height = maxHeight;
+            scale = sHeight / maxHeight; //>1
+            width = sWidth / scale;
+        }
+
+        if (sHeight > maxHeight && sWidth > maxWidth) {
+            height = maxHeight;
+            scale = sHeight / maxHeight; //>1
+            sWidth = sWidth / scale;
+            width = sWidth;
+        }
+
+        if (width > maxWidth || height > maxHeight) {
+            _x = maxWidth;
+            _x2 = maxHeight;
+            _x3 = width;
+            _x4 = height;
+            _again = true;
+            width = height = scale = undefined;
+            continue _function;
+        }
+
+        width = Math.round(width);
+        height = Math.round(height);
+
+        return { width: width, height: height };
+    }
 };
 
 /***/ }),
