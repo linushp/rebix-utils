@@ -7,6 +7,7 @@ var formatDatePretty = require('./formatDatePretty');
 var formatNumber = require('./formatNumber');
 var getDeepValue = require('./getDeepValue');
 var getRandomNum = require('./getRandomNum');
+var getMediaWidthHeight = require('./getMediaWidthHeight');
 var isPromise = require('./isPromise');
 var JSXRenderUtils = require('./JSXRenderUtils');
 var loadPromiseShim = require('./loadPromiseShim');
@@ -41,6 +42,7 @@ mergeExport({
     formatNumber: formatNumber,
     getDeepValue: getDeepValue,
     getRandomNum: getRandomNum,
+    getMediaWidthHeight:getMediaWidthHeight,
     isPromise: isPromise,
     loadPromiseShim: loadPromiseShim,
     onDomReady: onDomReady,
