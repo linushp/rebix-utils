@@ -9,7 +9,7 @@ var property = function (key) {
 };
 
 var getLength = property('length');
-var toString = Object.prototype.toString;
+var prototypeToString = Object.prototype.toString;
 var nativeIsArray = Array.isArray;
 var nativeKeys = Object.keys;
 
@@ -20,7 +20,7 @@ var isArrayLike = miniUnderscore.isArrayLike = function (collection) {
 
 // Delegates to ECMA5's native Array.isArray
 var isArray = miniUnderscore.isArray = nativeIsArray || function (obj) {
-        return toString.call(obj) === '[object Array]';
+        return prototypeToString.call(obj) === '[object Array]';
     };
 
 // Is a given variable an object?
@@ -44,19 +44,25 @@ var forEach = miniUnderscore.each = miniUnderscore.forEach = function (obj, iter
     return obj;
 };
 
-miniUnderscore.map = function (arr, iteratee) {
+miniUnderscore.map = function (arrOrObj, iteratee ,isIgnoreEmpty) {
     var result = [];
-    forEach(arr, function (value, key) {
+    forEach(arrOrObj, function (value, key) {
         var m = iteratee(value, key);
-        result.push(m);
+        if(isIgnoreEmpty){//默认false
+            if(!miniUnderscore.isEmpty(m)){
+                result.push(m);
+            }
+        }else {
+            result.push(m);
+        }
     });
     return result;
 };
 
-// Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError.
-miniUnderscore.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'], function (name) {
+// Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError ,'isArrayBuffer'
+miniUnderscore.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error' ,'ArrayBuffer'], function (name) {
     miniUnderscore['is' + name] = function (obj) {
-        return toString.call(obj) === '[object ' + name + ']';
+        return prototypeToString.call(obj) === '[object ' + name + ']';
     };
 });
 
@@ -71,7 +77,9 @@ var createAssigner = function (keysFunc, undefinedOnly) {
                 l = keys.length;
             for (var i = 0; i < l; i++) {
                 var key = keys[i];
-                if (!undefinedOnly || obj[key] === void 0) obj[key] = source[key];
+                if (!undefinedOnly || obj[key] === void 0){
+                    obj[key] = source[key];
+                }
             }
         }
         return obj;
@@ -87,5 +95,62 @@ miniUnderscore.isEmpty = function(obj) {
     if (isArrayLike(obj) && (isArray(obj) || miniUnderscore.isString(obj) || miniUnderscore.isArguments(obj))) return obj.length === 0;
     return nativeKeys(obj).length === 0;
 };
+
+
+miniUnderscore.isObjectLike = function(value) {
+    return !!value && typeof value == 'object';
+};
+
+
+var _uniqueId = 0;
+miniUnderscore.uniqueId = function (prefix) {
+    prefix = prefix || "";
+    return '' + prefix + (_uniqueId++);
+};
+
+
+miniUnderscore.keys = nativeKeys;
+miniUnderscore.noop = function(){};
+
+miniUnderscore.uniq = function (objectArray, keyGetter) {
+    keyGetter = keyGetter || function(obj){ return obj; };
+    var hash = {};
+    var result = [];
+    for (var i = 0; i < objectArray.length; i++) {
+        var obj = objectArray[i];
+        var key = keyGetter(obj);
+        if (!hash["$" + key]) {
+            result.push(obj);
+            hash["$" + key] = true;
+        }
+    }
+    return result;
+};
+
+miniUnderscore.uniqBy = function(objectArray,keyName){
+    return miniUnderscore.uniq(objectArray,function(obj){
+        return obj[keyName];
+    })
+};
+
+miniUnderscore.pick = function(){
+    //TODO
+};
+
+miniUnderscore.omit = function(){
+    //TODO
+};
+
+//miniUnderscore.debounce = function(){
+//    //TODO
+//};
+
+miniUnderscore.values = function(obj){
+    return miniUnderscore.map(obj,function(v){
+        return v;
+    });
+};
+
+
 
 module.exports = miniUnderscore;
