@@ -1,4 +1,5 @@
 var miniUnderscore = require('./miniUnderscore');
+var warning = require('./warning');
 
 var _undefined = undefined;
 var isFunction = miniUnderscore.isFunction;
@@ -53,7 +54,7 @@ function getValueInPath(obj, str) {
         }
         return tmpObj;
     } catch (e) {
-        console.log('[ERROR]', e);
+        warning('[ERROR]', e);
     }
 
     return _undefined;

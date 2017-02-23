@@ -17,6 +17,7 @@ var onDomReady = require('./onDomReady');
 var shallowEqual = require('./shallowEqual');
 var URLUtils = require('./URLUtils');
 var StringUtils = require('./StringUtils/StringUtils');
+var TaskQueueRunner = require('./TaskQueueRunner');
 var TimeUtils = require('./TimeUtils');
 
 
@@ -46,7 +47,8 @@ mergeExport({
     isPromise: isPromise,
     loadPromiseShim: loadPromiseShim,
     onDomReady: onDomReady,
-    shallowEqual: shallowEqual
+    shallowEqual: shallowEqual,
+    TaskQueueRunner:TaskQueueRunner
 });
 
 

@@ -1,4 +1,5 @@
 var miniUnderscore = require('./miniUnderscore');
+var warning = require('./warning');
 
 /**
  * 解析URL
@@ -60,7 +61,7 @@ function mapQuery(uri) {
             }
         }
         catch (e) {
-            console.log("错误：[" + e.name + "] " + e.message + ", " + e.fileName + ", 行号:" + e.lineNumber + "; stack:" + typeof e.stack, 2);
+            warning("错误：[" + e.name + "] " + e.message + ", " + e.fileName + ", 行号:" + e.lineNumber + "; stack:" + typeof e.stack, 2);
         }
     }
     return params;
