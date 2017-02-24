@@ -11,7 +11,8 @@
 
     "build_addon:umd": "cross-env NODE_ENV=development webpack index_addon.js dist/RebixUtils.addon.js",
     "build_addon:umd:min": "cross-env NODE_ENV=production webpack index_addon.js dist/RebixUtils.addon.min.js",
-    "build_addon": "npm run build_addon:umd && npm run build_addon:umd:min"
+    "build_addon": "npm run build_addon:umd && npm run build_addon:umd:min",
+    "build_all": "npm run build && npm run build_addon"
   },
   "main": "dist/RebixUtils.js",
   "repository": {
