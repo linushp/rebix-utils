@@ -22,20 +22,20 @@ var TimeUtils = require('./TimeUtils');
 
 
 var exportObject = {};
-function mergeExport(exportObj) {
+function mixin(exportObj) {
     miniUnderscore.assignObject(exportObject, exportObj);
 }
 
-mergeExport(AjaxUtils);
-mergeExport(ArrayUtils);
-mergeExport(URLUtils);
-mergeExport(JSXRenderUtils);
-mergeExport(StringUtils);
-mergeExport(loadStaticUtils);
-mergeExport(miniUnderscore);
-mergeExport(TimeUtils);
+mixin(AjaxUtils);
+mixin(ArrayUtils);
+mixin(URLUtils);
+mixin(JSXRenderUtils);
+mixin(StringUtils);
+mixin(loadStaticUtils);
+mixin(miniUnderscore);
+mixin(TimeUtils);
 
-mergeExport({
+mixin({
     EventBus: EventBus,
     CookieUtils: CookieUtils,
     formatDate: formatDate,
@@ -43,12 +43,13 @@ mergeExport({
     formatNumber: formatNumber,
     getDeepValue: getDeepValue,
     getRandomNum: getRandomNum,
-    getMediaWidthHeight:getMediaWidthHeight,
+    getMediaWidthHeight: getMediaWidthHeight,
     isPromise: isPromise,
     loadPromiseShim: loadPromiseShim,
     onDomReady: onDomReady,
     shallowEqual: shallowEqual,
-    TaskQueueRunner:TaskQueueRunner
+    TaskQueueRunner: TaskQueueRunner,
+    mixin: mixin
 });
 
 

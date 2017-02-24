@@ -7,7 +7,11 @@
     "build:lib": "babel src --out-dir lib",
     "build:umd": "cross-env NODE_ENV=development webpack index.js dist/RebixUtils.js",
     "build:umd:min": "cross-env NODE_ENV=production webpack index.js dist/RebixUtils.min.js",
-    "build": "npm run build:umd && npm run build:umd:min"
+    "build": "npm run build:umd && npm run build:umd:min",
+
+    "build_addon:umd": "cross-env NODE_ENV=development webpack index_addon.js dist/RebixUtilsAddon.js",
+    "build_addon:umd:min": "cross-env NODE_ENV=production webpack index_addon.js dist/RebixUtilsAddon.min.js",
+    "build_addon": "npm run build_addon:umd && npm run build_addon:umd:min"
   },
   "main": "dist/RebixUtils.js",
   "repository": {

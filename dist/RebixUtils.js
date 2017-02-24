@@ -115,17 +115,28 @@ miniUnderscore.isObject = function (obj) {
 };
 
 var forEach = miniUnderscore.each = miniUnderscore.forEach = function (obj, iteratee) {
-    var i, length;
-    if (isArrayLike(obj)) {
-        for (i = 0, length = obj.length; i < length; i++) {
-            iteratee(obj[i], i, obj);
-        }
+    if (!obj) {
+        return obj;
+    }
+
+    //如果参数本身就支持forEach直接用. immutableList和高级浏览器原生array支持.
+    if (miniUnderscore.isFunction(obj.forEach)) {
+        obj.forEach(iteratee);
     } else {
-        var keys = nativeKeys(obj);
-        for (i = 0, length = keys.length; i < length; i++) {
-            iteratee(obj[keys[i]], keys[i], obj);
+
+        var i, length;
+        if (isArrayLike(obj)) {
+            for (i = 0, length = obj.length; i < length; i++) {
+                iteratee(obj[i], i, obj);
+            }
+        } else {
+            var keys = nativeKeys(obj);
+            for (i = 0, length = keys.length; i < length; i++) {
+                iteratee(obj[keys[i]], keys[i], obj);
+            }
         }
     }
+
     return obj;
 };
 
@@ -224,10 +235,6 @@ miniUnderscore.pick = function () {
 miniUnderscore.omit = function () {
     //TODO
 };
-
-//miniUnderscore.debounce = function(){
-//    //TODO
-//};
 
 miniUnderscore.values = function (obj) {
     return miniUnderscore.map(obj, function (v) {
@@ -1773,20 +1780,20 @@ var TaskQueueRunner = __webpack_require__(10);
 var TimeUtils = __webpack_require__(11);
 
 var exportObject = {};
-function mergeExport(exportObj) {
+function mixin(exportObj) {
     miniUnderscore.assignObject(exportObject, exportObj);
 }
 
-mergeExport(AjaxUtils);
-mergeExport(ArrayUtils);
-mergeExport(URLUtils);
-mergeExport(JSXRenderUtils);
-mergeExport(StringUtils);
-mergeExport(loadStaticUtils);
-mergeExport(miniUnderscore);
-mergeExport(TimeUtils);
+mixin(AjaxUtils);
+mixin(ArrayUtils);
+mixin(URLUtils);
+mixin(JSXRenderUtils);
+mixin(StringUtils);
+mixin(loadStaticUtils);
+mixin(miniUnderscore);
+mixin(TimeUtils);
 
-mergeExport({
+mixin({
     EventBus: EventBus,
     CookieUtils: CookieUtils,
     formatDate: formatDate,
@@ -1799,7 +1806,8 @@ mergeExport({
     loadPromiseShim: loadPromiseShim,
     onDomReady: onDomReady,
     shallowEqual: shallowEqual,
-    TaskQueueRunner: TaskQueueRunner
+    TaskQueueRunner: TaskQueueRunner,
+    mixin: mixin
 });
 
 module.exports = exportObject;
