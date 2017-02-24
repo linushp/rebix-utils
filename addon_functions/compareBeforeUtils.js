@@ -11,13 +11,25 @@ function getStorage(groupName) {
     return s;
 }
 
-module.exports = function differentBefore(groupName, keyName, obj) {
+
+function isCompareBefore(groupName, keyName, obj, compareFunc) {
     var storage = getStorage(groupName);
     var key = obj[keyName];
     var beforeObject = storage['' + key];
-    if (!beforeObject || !shallowEqual(beforeObject, obj)) {
+    if (!beforeObject || compareFunc(beforeObject, obj)) {
         storage['' + key] = obj;
         return true;//有不同
     }
     return false;
+}
+
+function isDifferentBefore(groupName, keyName, obj) {
+    return isCompareBefore(groupName, keyName, obj, function (beforeObject, obj) {
+        return !shallowEqual(beforeObject, obj);
+    });
+}
+
+module.exports = {
+    isCompareBefore: isCompareBefore,
+    isDifferentBefore: isDifferentBefore
 };

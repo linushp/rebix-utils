@@ -84,7 +84,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 var miniUnderscore = {};
-
+var NOT_EXIST_INDEX = -1;
 var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
 
 var property = function property(key) {
@@ -96,17 +96,33 @@ var property = function property(key) {
 var getLength = property('length');
 var prototypeToString = Object.prototype.toString;
 var nativeIsArray = Array.isArray;
-var nativeKeys = Object.keys;
+var nativeKeys = Object.keys || function (obj) {
+    var result = [];
+    if (!obj) {
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                result.push(key);
+            }
+        }
+    }
+    return result;
+};
 
 var isArrayLike = miniUnderscore.isArrayLike = function (collection) {
     var length = getLength(collection);
     return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
 };
 
-// Delegates to ECMA5's native Array.isArray
-var isArray = miniUnderscore.isArray = nativeIsArray || function (obj) {
-    return prototypeToString.call(obj) === '[object Array]';
+var isTypeOf = function isTypeOf(typeName) {
+    return function (obj) {
+        return prototypeToString.call(obj) === '[object ' + typeName + ']';
+    };
 };
+
+// Delegates to ECMA5's native Array.isArray
+var isArray = miniUnderscore.isArray = nativeIsArray || isTypeOf('Array');
+
+var isFunction = isTypeOf('Function');
 
 // Is a given variable an object?
 miniUnderscore.isObject = function (obj) {
@@ -120,7 +136,7 @@ var forEach = miniUnderscore.each = miniUnderscore.forEach = function (obj, iter
     }
 
     //如果参数本身就支持forEach直接用. immutableList和高级浏览器原生array支持.
-    if (miniUnderscore.isFunction(obj.forEach)) {
+    if (isFunction(obj.forEach)) {
         obj.forEach(iteratee);
     } else {
 
@@ -157,10 +173,8 @@ miniUnderscore.map = function (arrOrObj, iteratee, isIgnoreEmpty) {
 };
 
 // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError ,'isArrayBuffer'
-miniUnderscore.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error', 'ArrayBuffer'], function (name) {
-    miniUnderscore['is' + name] = function (obj) {
-        return prototypeToString.call(obj) === '[object ' + name + ']';
-    };
+forEach(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error', 'ArrayBuffer'], function (name) {
+    miniUnderscore['is' + name] = isTypeOf(name);
 });
 
 // An internal function for creating assigner functions.
@@ -228,12 +242,47 @@ miniUnderscore.uniqBy = function (objectArray, keyName) {
     });
 };
 
-miniUnderscore.pick = function () {
-    //TODO
+miniUnderscore.pick = function (obj, keyArray) {
+    var result = {};
+    forEach(keyArray, function (key) {
+        result[key] = obj[key];
+    });
+    return result;
 };
 
-miniUnderscore.omit = function () {
-    //TODO
+var findIndex = miniUnderscore.findIndex = function (arrayOrList, predicate) {
+    var indexResult = NOT_EXIST_INDEX;
+    forEach(arrayOrList, function (obj, index) {
+        if (indexResult === NOT_EXIST_INDEX) {
+            var isMatch = predicate(obj, index);
+            if (isMatch) {
+                indexResult = index;
+            }
+        }
+    });
+    return indexResult;
+};
+
+var contains = miniUnderscore.contains = function (array0, obj) {
+    return NOT_EXIST_INDEX !== findIndex(array0, function (obj0) {
+        return obj0 === obj;
+    });
+};
+
+var different = miniUnderscore.different = function (array1, array2) {
+    var result = [];
+    forEach(array1, function (obj1) {
+        if (!contains(array2, obj1)) {
+            result.push(obj1);
+        }
+    });
+    return result;
+};
+
+miniUnderscore.omit = function (obj, keyArray) {
+    var oldKeys = nativeKeys(obj);
+    var keyArray1 = different(oldKeys, keyArray);
+    return miniUnderscore.pick(obj, keyArray1);
 };
 
 miniUnderscore.values = function (obj) {

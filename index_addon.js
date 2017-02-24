@@ -1,11 +1,9 @@
 var exportObject = require('./index');
-var ImmutableUtils = require('./addon_ImmutableUtils/ImmutableUtils');
-var differentBefore = require('./addon_functions/differentBefore');
+var ImmutableUtils = require('./addon_immutable/ImmutableUtils');
+var CompareBeforeUtils = require('./addon_functions/CompareBeforeUtils');
 
 var mixin = exportObject['mixin'];
 mixin(ImmutableUtils);
-mixin({
-    differentBefore:differentBefore
-});
+mixin(CompareBeforeUtils);
 
 module.exports = exportObject;
