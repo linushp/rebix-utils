@@ -30,17 +30,28 @@ miniUnderscore.isObject = function (obj) {
 };
 
 var forEach = miniUnderscore.each = miniUnderscore.forEach = function (obj, iteratee) {
-    var i, length;
-    if (isArrayLike(obj)) {
-        for (i = 0, length = obj.length; i < length; i++) {
-            iteratee(obj[i], i, obj);
-        }
-    } else {
-        var keys = nativeKeys(obj);
-        for (i = 0, length = keys.length; i < length; i++) {
-            iteratee(obj[keys[i]], keys[i], obj);
+    if(!obj){
+        return obj;
+    }
+
+    //如果参数本身就支持forEach直接用. immutableList和高级浏览器原生array支持.
+    if(miniUnderscore.isFunction(obj.forEach)){
+        obj.forEach(iteratee);
+    }else {
+
+        var i, length;
+        if (isArrayLike(obj)) {
+            for (i = 0, length = obj.length; i < length; i++) {
+                iteratee(obj[i], i, obj);
+            }
+        } else {
+            var keys = nativeKeys(obj);
+            for (i = 0, length = keys.length; i < length; i++) {
+                iteratee(obj[keys[i]], keys[i], obj);
+            }
         }
     }
+
     return obj;
 };
 
@@ -140,10 +151,6 @@ miniUnderscore.pick = function(){
 miniUnderscore.omit = function(){
     //TODO
 };
-
-//miniUnderscore.debounce = function(){
-//    //TODO
-//};
 
 miniUnderscore.values = function(obj){
     return miniUnderscore.map(obj,function(v){
