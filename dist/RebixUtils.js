@@ -172,8 +172,8 @@ miniUnderscore.map = function (arrOrObj, iteratee, isIgnoreEmpty) {
     return result;
 };
 
-// Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError ,'isArrayBuffer'
-forEach(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error', 'ArrayBuffer'], function (name) {
+// Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError ,'isArrayBuffer' ,'isBlob'
+forEach(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error', 'ArrayBuffer', 'Blob'], function (name) {
     miniUnderscore['is' + name] = isTypeOf(name);
 });
 
@@ -227,10 +227,10 @@ miniUnderscore.uniq = function (objectArray, keyGetter) {
     var result = [];
     for (var i = 0; i < objectArray.length; i++) {
         var obj = objectArray[i];
-        var key = keyGetter(obj);
-        if (!hash["$" + key]) {
+        var key = '' + keyGetter(obj);
+        if (!hash[key]) {
             result.push(obj);
-            hash["$" + key] = true;
+            hash[key] = true;
         }
     }
     return result;

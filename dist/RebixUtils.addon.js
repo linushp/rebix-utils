@@ -172,8 +172,8 @@ miniUnderscore.map = function (arrOrObj, iteratee, isIgnoreEmpty) {
     return result;
 };
 
-// Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError ,'isArrayBuffer'
-forEach(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error', 'ArrayBuffer'], function (name) {
+// Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError ,'isArrayBuffer' ,'isBlob'
+forEach(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error', 'ArrayBuffer', 'Blob'], function (name) {
     miniUnderscore['is' + name] = isTypeOf(name);
 });
 
@@ -227,10 +227,10 @@ miniUnderscore.uniq = function (objectArray, keyGetter) {
     var result = [];
     for (var i = 0; i < objectArray.length; i++) {
         var obj = objectArray[i];
-        var key = keyGetter(obj);
-        if (!hash["$" + key]) {
+        var key = '' + keyGetter(obj);
+        if (!hash[key]) {
             result.push(obj);
-            hash["$" + key] = true;
+            hash[key] = true;
         }
     }
     return result;
@@ -528,10 +528,10 @@ function getStorage(groupName) {
 
 function isCompareBefore(groupName, keyName, obj, compareFunc) {
     var storage = getStorage(groupName);
-    var key = obj[keyName];
-    var beforeObject = storage['' + key];
-    if (!beforeObject || compareFunc(beforeObject, obj)) {
-        storage['' + key] = obj;
+    var key = '' + obj[keyName];
+    var beforeObject = storage[key];
+    if (compareFunc(beforeObject, obj)) {
+        storage[key] = obj;
         return true; //有不同
     }
     return false;
@@ -539,7 +539,7 @@ function isCompareBefore(groupName, keyName, obj, compareFunc) {
 
 function isDifferentBefore(groupName, keyName, obj) {
     return isCompareBefore(groupName, keyName, obj, function (beforeObject, obj) {
-        return !shallowEqual(beforeObject, obj);
+        return !beforeObject || !shallowEqual(beforeObject, obj);
     });
 }
 
