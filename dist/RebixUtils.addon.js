@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 33);
+/******/ 	return __webpack_require__(__webpack_require__.s = 34);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -313,9 +313,9 @@ module.exports = warning;
 "use strict";
 
 
-var camelCase = __webpack_require__(15);
-var deCamelCase = __webpack_require__(16);
-var slash = __webpack_require__(17);
+var camelCase = __webpack_require__(16);
+var deCamelCase = __webpack_require__(17);
+var slash = __webpack_require__(18);
 var upFirstChar = __webpack_require__(3);
 
 function trim(str) {
@@ -556,8 +556,8 @@ module.exports = {
 
 
 var immutableLib = __webpack_require__(4);
-var pushOrUpdateList = __webpack_require__(22);
-var isImmutable = __webpack_require__(21);
+var pushOrUpdateList = __webpack_require__(23);
+var isImmutable = __webpack_require__(22);
 
 module.exports = {
     setImmutableLib: immutableLib.setImmutableLib,
@@ -577,23 +577,24 @@ var AjaxUtils = __webpack_require__(10);
 var ArrayUtils = __webpack_require__(11);
 var CookieUtils = __webpack_require__(12);
 var EventBus = __webpack_require__(13);
-var formatDate = __webpack_require__(23);
-var formatDatePretty = __webpack_require__(24);
-var formatNumber = __webpack_require__(25);
-var getDeepValue = __webpack_require__(26);
-var getRandomNum = __webpack_require__(28);
-var getMediaWidthHeight = __webpack_require__(27);
-var isPromise = __webpack_require__(29);
+var formatDate = __webpack_require__(24);
+var formatDatePretty = __webpack_require__(25);
+var formatNumber = __webpack_require__(26);
+var getDeepValue = __webpack_require__(27);
+var getRandomNum = __webpack_require__(29);
+var getMediaWidthHeight = __webpack_require__(28);
+var isPromise = __webpack_require__(30);
 var JSXRenderUtils = __webpack_require__(14);
-var loadPromiseShim = __webpack_require__(30);
+var loadPromiseShim = __webpack_require__(31);
 var loadStaticUtils = __webpack_require__(5);
 var miniUnderscore = __webpack_require__(0);
-var onDomReady = __webpack_require__(31);
+var onDomReady = __webpack_require__(32);
 var shallowEqual = __webpack_require__(6);
-var URLUtils = __webpack_require__(20);
+var URLUtils = __webpack_require__(21);
 var StringUtils = __webpack_require__(2);
-var TaskQueueRunner = __webpack_require__(18);
-var TimeUtils = __webpack_require__(19);
+var TaskQueueRunner = __webpack_require__(19);
+var TimeUtils = __webpack_require__(20);
+var ServiceUtils = __webpack_require__(15);
 
 var exportObject = {};
 function mixin(exportObj) {
@@ -608,6 +609,7 @@ mixin(StringUtils);
 mixin(loadStaticUtils);
 mixin(miniUnderscore);
 mixin(TimeUtils);
+mixin(ServiceUtils);
 
 mixin({
     EventBus: EventBus,
@@ -638,7 +640,7 @@ module.exports = exportObject;
 
 
 var miniUnderscore = __webpack_require__(0);
-var parseHeaders = __webpack_require__(32);
+var parseHeaders = __webpack_require__(33);
 var upFirstChar = __webpack_require__(3);
 var isFunction = miniUnderscore.isFunction;
 var xtend = miniUnderscore.extend;
@@ -1121,6 +1123,69 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+var _services = {
+    'common': {}
+};
+
+/**
+ * demo :
+ * 1. setService("app1")("UserUtils",{})
+ * 2. setService()("UserUtils",{})
+ *
+ * @param module
+ * @returns {Function}
+ */
+function setService(module) {
+    return function (key, value) {
+        getServices(module)[key] = value;
+    };
+}
+
+/**
+ * demo:
+ * 1.getService("app1")("UserUtils");
+ * 1.getService()("UserUtils");
+ *
+ * @param module
+ * @returns {Function}
+ */
+function getService(module) {
+    return function (key) {
+        return getServices(module)[key];
+    };
+}
+
+/**
+ * demo:
+ * 1.getServices("app1");
+ * 2.getServices();
+ * @param module
+ * @returns {*}
+ */
+function getServices(module) {
+    module = module || "common";
+    _services[module] = _services[module] || {};
+    return _services[module];
+}
+
+function getAllServices() {
+    return _services;
+}
+
+module.exports = {
+    setService: setService,
+    getService: getService,
+    getServices: getServices,
+    getAllServices: getAllServices
+};
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 //clone from https://github.com/sindresorhus/camelcase
 
 
@@ -1150,7 +1215,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1172,7 +1237,7 @@ function fromCamelCase(string, join) {
 module.exports = fromCamelCase;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1236,7 +1301,7 @@ module.exports = function (str) {
 // MIT © [Sindre Sorhus](http://sindresorhus.com)
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1322,7 +1387,7 @@ TaskQueueRunnerPrototype.stop = function () {
 module.exports = TaskQueueRunner;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1384,7 +1449,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1484,7 +1549,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1500,7 +1565,7 @@ function isImmutable(obj) {
 module.exports = isImmutable;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1547,7 +1612,7 @@ function pushOrUpdateList(immutableOldList, addList, keyName, mergeFunction, cre
 module.exports = pushOrUpdateList;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1593,7 +1658,7 @@ var formatDate = function formatDate(date, formatString) {
 module.exports = formatDate;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1662,7 +1727,7 @@ function formatDatePretty(timeStr, nowTime0) {
 module.exports = formatDatePretty;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1739,7 +1804,7 @@ var formatNumber = function formatNumber(num, pattern) {
 module.exports = formatNumber;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1808,7 +1873,7 @@ function getValueInPath(obj, str) {
 module.exports = getValueInPath;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1877,7 +1942,7 @@ module.exports = function getMediaSize(_x, _x2, _x3, _x4) {
 };
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1888,7 +1953,7 @@ module.exports = function getRandomNumber(min, max) {
 };
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1901,7 +1966,7 @@ function isPromise(p) {
 module.exports = isPromise;
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1924,7 +1989,7 @@ function loadShimES6Promise(callback) {
 module.exports = loadShimES6Promise;
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1975,7 +2040,7 @@ function onDomReady(callback) {
 module.exports = onDomReady;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2011,7 +2076,7 @@ module.exports = function (headers) {
 };
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

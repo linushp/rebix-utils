@@ -19,6 +19,7 @@ var URLUtils = require('./URLUtils');
 var StringUtils = require('./StringUtils/StringUtils');
 var TaskQueueRunner = require('./TaskQueueRunner');
 var TimeUtils = require('./TimeUtils');
+var ServiceUtils = require('./ServiceUtils');
 
 
 var exportObject = {};
@@ -34,6 +35,7 @@ mixin(StringUtils);
 mixin(loadStaticUtils);
 mixin(miniUnderscore);
 mixin(TimeUtils);
+mixin(ServiceUtils);
 
 mixin({
     EventBus: EventBus,
