@@ -1,4 +1,4 @@
-const _services = {
+var _services_container = {
     'common': {}
 };
 
@@ -41,18 +41,48 @@ function getService(module) {
  */
 function getServices(module) {
     module = module || "common";
-    _services[module] = _services[module] || {};
-    return _services[module];
+    _services_container[module] = _services_container[module] || {};
+    return _services_container[module];
+}
+
+
+/**
+ *
+ * @param p1 [可省略] module
+ * @param p2 services
+ */
+function setServices(p1, p2) {
+    var module, services;
+    if (!p2) {
+        module = 'common';
+        services = p1;
+    } else {
+        module = p1;
+        services = p2;
+    }
+
+    var oldServices = getServices(module);
+    for (var serviceName in services) {
+        if (services.hasOwnProperty(serviceName)) {
+            var serviceObj = services[serviceName];
+            oldServices[serviceName] = serviceObj;
+        }
+    }
 }
 
 
 function getAllServices() {
-    return _services;
+    return _services_container;
 }
 
 module.exports = {
+
     setService: setService,
     getService: getService,
+
     getServices: getServices,
+    setServices: setServices,
+
     getAllServices: getAllServices
+
 };
