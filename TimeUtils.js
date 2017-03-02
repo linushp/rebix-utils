@@ -11,10 +11,15 @@ function ServerTimeClass() {
 
 var ServerTimeClassPrototype = ServerTimeClass.prototype;
 
-ServerTimeClassPrototype.updateServerTime = function (serverTimestamp) {
+/**
+ * 更新服务端时间
+ * @param serverTimestamp 服务器时间
+ * @param clientTimestamp 此刻的客户端时间
+ */
+ServerTimeClassPrototype.updateServerTime = function (serverTimestamp,clientTimestamp) {
     var that = this;
     that[_lastServerTimestamp] = serverTimestamp;
-    that[_lastClientTimestamp] = new Date().getTime();
+    that[_lastClientTimestamp] = clientTimestamp || new Date().getTime();
 };
 
 ServerTimeClassPrototype.getServerTimeNow = function () {
