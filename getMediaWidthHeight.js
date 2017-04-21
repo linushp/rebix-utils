@@ -6,7 +6,18 @@
  * @param sHeight
  * @returns {*}
  */
-module.exports  = function getMediaSize(maxWidth,maxHeight,sWidth,sHeight){
+module.exports  = function getMediaSize(maxWidth,maxHeight,sWidth,sHeight,loopCount){
+
+    if(!loopCount){
+        loopCount = 0;
+    }
+
+    if(loopCount > 2){
+        //防止死循环
+        console.log("[ERROR]getMediaSize");
+        return {width: sWidth, height: sHeight}
+    }
+
     var width = 100;
     var height = 100;
     var scale = 0;
@@ -35,11 +46,12 @@ module.exports  = function getMediaSize(maxWidth,maxHeight,sWidth,sHeight){
     }
 
     if(width > maxWidth || height > maxHeight){
-        return getMediaSize(maxWidth,maxHeight,width,height);
+        return getMediaSize(maxWidth,maxHeight,width,height,loopCount+1);
     }
 
     width = Math.round(width);
     height = Math.round(height);
 
     return {width: width, height:height};
+
 };
