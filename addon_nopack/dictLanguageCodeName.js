@@ -1,4 +1,4 @@
-var languageCodeName = [
+var dictPhoneCountryCode = [
 
     ['af','南非语'],
     ['af-ZA','南非语'],
