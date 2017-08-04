@@ -2,7 +2,7 @@
 
 
 
-const PROMISE_CACHE = {};
+var PROMISE_CACHE = {};
 
 
 /**
