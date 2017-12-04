@@ -313,6 +313,48 @@ module.exports = warning;
 "use strict";
 
 
+function isPromise(p) {
+    return p && typeof p.then === 'function' && typeof p['catch'] === 'function';
+}
+
+var PROMISE_CACHE = {};
+/**
+ * 将promise缓存起来,可以防止在短时间内发起重复的请求
+ * @param promiseId 用于标记一个Promise的Id
+ * @param cacheSecond 缓存时间
+ * @param createFunction
+ * @returns {*}
+ */
+function getCacheOrCreatePromise(promiseId, cacheSecond, createFunction) {
+
+    var date_now = new Date().getTime();
+
+    var cachePromise = PROMISE_CACHE[promiseId];
+    if (cachePromise && date_now - cachePromise['time'] < 1000 * cacheSecond) {
+        return cachePromise['promise'];
+    } else {
+        var promise = createFunction();
+        PROMISE_CACHE[promiseId] = {
+            promise: promise,
+            time: date_now
+        };
+        return promise;
+    }
+}
+
+module.exports = {
+    _PROMISE_CACHE: PROMISE_CACHE,
+    isPromise: isPromise,
+    getCacheOrCreatePromise: getCacheOrCreatePromise
+};
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var getElementsByTagName = document.getElementsByTagName;
 var createElement = document.createElement;
 
@@ -387,11 +429,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+
+var PromiseUtils = __webpack_require__(2);
 
 function sendXmlHttpRequest(method, url, data, contentType, responseType) {
 
@@ -439,8 +483,14 @@ function jsonParseResponseText(responseText) {
     return JSON.parse(responseText);
 }
 
-function sendGetRequest(url) {
-    return sendXmlHttpRequest("GET", url);
+function sendGetRequest(url, cacheSecond) {
+    if (!cacheSecond) {
+        return sendXmlHttpRequest("GET", url);
+    }
+
+    return PromiseUtils.getCacheOrCreatePromise("get:" + url, cacheSecond, function () {
+        return sendXmlHttpRequest("GET", url);
+    });
 }
 
 function sendGetJSONRequest(url, cacheSecond) {
@@ -504,7 +554,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -525,7 +575,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -585,7 +635,7 @@ var CookieUtils = {
 module.exports = CookieUtils;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -645,7 +695,7 @@ EventBusClassPrototype.emit = function (eventName, m1, m2, m3, m4, m5) {
 module.exports = EventBusClass;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -699,7 +749,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -742,7 +792,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -834,7 +884,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -876,7 +926,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -962,7 +1012,7 @@ TaskQueueRunnerPrototype.stop = function () {
 module.exports = TaskQueueRunner;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1029,7 +1079,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1129,7 +1179,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1175,7 +1225,7 @@ var formatDate = function formatDate(date, formatString) {
 module.exports = formatDate;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1244,7 +1294,7 @@ function formatDatePretty(timeStr, nowTime0) {
 module.exports = formatDatePretty;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1321,7 +1371,7 @@ var formatNumber = function formatNumber(num, pattern) {
 module.exports = formatNumber;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1390,7 +1440,7 @@ function getValueInPath(obj, str) {
 module.exports = getValueInPath;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1471,7 +1521,7 @@ module.exports = function getMediaSize(_x, _x2, _x3, _x4, _x5) {
 };
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1482,26 +1532,13 @@ module.exports = function getRandomNumber(min, max) {
 };
 
 /***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function isPromise(p) {
-    return p && typeof p.then === 'function' && typeof p['catch'] === 'function';
-}
-
-module.exports = isPromise;
-
-/***/ }),
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var loadStaticUtils = __webpack_require__(2);
+var loadStaticUtils = __webpack_require__(3);
 var loadStaticJS = loadStaticUtils.loadStaticJS;
 
 function loadShimES6Promise(callback) {
@@ -1746,29 +1783,29 @@ module.exports = upFirstChar;
 "use strict";
 
 
-var AjaxUtils = __webpack_require__(3);
-var ArrayUtils = __webpack_require__(4);
-var CookieUtils = __webpack_require__(5);
-var EventBus = __webpack_require__(6);
-var formatDate = __webpack_require__(14);
-var formatDatePretty = __webpack_require__(15);
-var formatNumber = __webpack_require__(16);
-var getDeepValue = __webpack_require__(17);
-var getRandomNum = __webpack_require__(19);
-var getMediaWidthHeight = __webpack_require__(18);
-var isPromise = __webpack_require__(20);
-var JSXRenderUtils = __webpack_require__(7);
+var AjaxUtils = __webpack_require__(4);
+var ArrayUtils = __webpack_require__(5);
+var CookieUtils = __webpack_require__(6);
+var EventBus = __webpack_require__(7);
+var formatDate = __webpack_require__(15);
+var formatDatePretty = __webpack_require__(16);
+var formatNumber = __webpack_require__(17);
+var getDeepValue = __webpack_require__(18);
+var getRandomNum = __webpack_require__(20);
+var getMediaWidthHeight = __webpack_require__(19);
+var JSXRenderUtils = __webpack_require__(8);
 var loadPromiseShim = __webpack_require__(21);
-var loadStaticUtils = __webpack_require__(2);
+var loadStaticUtils = __webpack_require__(3);
 var miniUnderscore = __webpack_require__(0);
 var onDomReady = __webpack_require__(22);
 var shallowEqual = __webpack_require__(23);
-var URLUtils = __webpack_require__(13);
-var StringUtils = __webpack_require__(10);
-var TaskQueueRunner = __webpack_require__(11);
-var TimeUtils = __webpack_require__(12);
-var ServiceUtils = __webpack_require__(9);
-var ModuleUtils = __webpack_require__(8);
+var URLUtils = __webpack_require__(14);
+var StringUtils = __webpack_require__(11);
+var TaskQueueRunner = __webpack_require__(12);
+var TimeUtils = __webpack_require__(13);
+var ServiceUtils = __webpack_require__(10);
+var ModuleUtils = __webpack_require__(9);
+var PromiseUtils = __webpack_require__(2);
 
 var exportObject = {};
 function mixin(exportObj) {
@@ -1785,6 +1822,7 @@ mixin(miniUnderscore);
 mixin(TimeUtils);
 mixin(ServiceUtils);
 mixin(ModuleUtils);
+mixin(PromiseUtils);
 
 mixin({
     EventBus: EventBus,
@@ -1795,7 +1833,6 @@ mixin({
     getDeepValue: getDeepValue,
     getRandomNum: getRandomNum,
     getMediaWidthHeight: getMediaWidthHeight,
-    isPromise: isPromise,
     loadPromiseShim: loadPromiseShim,
     onDomReady: onDomReady,
     shallowEqual: shallowEqual,

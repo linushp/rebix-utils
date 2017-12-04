@@ -1,3 +1,8 @@
+
+var PromiseUtils = require("./PromiseUtils");
+
+
+
 function sendXmlHttpRequest(method, url, data, contentType, responseType) {
 
     return new Promise(function (resolve, reject) {
@@ -49,9 +54,18 @@ function jsonParseResponseText(responseText) {
     return JSON.parse(responseText);
 }
 
-function sendGetRequest(url) {
-    return sendXmlHttpRequest("GET", url);
+
+function sendGetRequest(url, cacheSecond) {
+    if (!cacheSecond) {
+        return sendXmlHttpRequest("GET", url);
+    }
+
+    return PromiseUtils.getCacheOrCreatePromise("get:" + url, cacheSecond, function () {
+        return sendXmlHttpRequest("GET", url);
+    });
 }
+
+
 
 function sendGetJSONRequest(url, cacheSecond) {
     return sendGetRequest(url, cacheSecond).then(jsonParseResponseText);

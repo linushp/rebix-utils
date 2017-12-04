@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 33);
+/******/ 	return __webpack_require__(__webpack_require__.s = 35);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -313,6 +313,48 @@ module.exports = warning;
 "use strict";
 
 
+function isPromise(p) {
+    return p && typeof p.then === 'function' && typeof p['catch'] === 'function';
+}
+
+var PROMISE_CACHE = {};
+/**
+ * 将promise缓存起来,可以防止在短时间内发起重复的请求
+ * @param promiseId 用于标记一个Promise的Id
+ * @param cacheSecond 缓存时间
+ * @param createFunction
+ * @returns {*}
+ */
+function getCacheOrCreatePromise(promiseId, cacheSecond, createFunction) {
+
+    var date_now = new Date().getTime();
+
+    var cachePromise = PROMISE_CACHE[promiseId];
+    if (cachePromise && date_now - cachePromise['time'] < 1000 * cacheSecond) {
+        return cachePromise['promise'];
+    } else {
+        var promise = createFunction();
+        PROMISE_CACHE[promiseId] = {
+            promise: promise,
+            time: date_now
+        };
+        return promise;
+    }
+}
+
+module.exports = {
+    _PROMISE_CACHE: PROMISE_CACHE,
+    isPromise: isPromise,
+    getCacheOrCreatePromise: getCacheOrCreatePromise
+};
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _immutableLib = null;
 
 /**
@@ -333,7 +375,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -413,7 +455,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -449,13 +491,13 @@ function shallowEqual(objA, objB) {
 module.exports = shallowEqual;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var shallowEqual = __webpack_require__(4);
+var shallowEqual = __webpack_require__(5);
 
 var CONST_STORAGE = {};
 
@@ -491,15 +533,104 @@ module.exports = {
 };
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var immutableLib = __webpack_require__(2);
-var pushOrUpdateList = __webpack_require__(23);
-var isImmutable = __webpack_require__(22);
+var compileTemplate = (function () {
+    var openTag = '<%',
+        closeTag = '%>',
+        retTag = '$return',
+        vars = 'var ',
+        varsInTpl,
+        codeArr = ''.trim ? [retTag + ' = "";', retTag + ' +=', ';', retTag + ';', 'print=function(){' + retTag + '+=[].join.call(arguments,"")},'] : [retTag + ' = [];', retTag + '.push(', ')', retTag + '.join("");', 'print=function(){' + retTag + '.push.apply(arguments)},'],
+        keys = ('break,case,catch,continue,debugger,default,delete,do,else,false,finally,for,function,if' + ',in,instanceof,new,null,return,switch,this,throw,true,try,typeof,var,void,while,with' + ',abstract,boolean,byte,char,class,const,double,enum,export,extends,final,float,goto' + ',implements,import,int,interface,long,native,package,private,protected,public,short' + ',static,super,synchronized,throws,transient,volatile' + ',arguments,let,yield').split(','),
+        keyMap = {};
+
+    for (var i = 0, len = keys.length; i < len; i++) {
+        keyMap[keys[i]] = 1;
+    }
+
+    function _getCompileFn(source) {
+        vars = 'var ';
+        varsInTpl = {};
+        varsInTpl[retTag] = 1;
+        var openArr = source.split(openTag),
+            tmpCode = '';
+
+        for (var i = 0, len = openArr.length; i < len; i++) {
+            var c = openArr[i],
+                cArr = c.split(closeTag);
+            if (cArr.length == 1) {
+                tmpCode += _html(cArr[0]);
+            } else {
+                tmpCode += _js(cArr[0]);
+                tmpCode += cArr[1] ? _html(cArr[1]) : '';
+            }
+        }
+
+        var code = vars + codeArr[0] + tmpCode + 'return ' + codeArr[3];
+        return new Function('$data', code);
+    }
+
+    function _html(s) {
+        s = s.replace(/('|"|\\)/g, '\\$1').replace(/\r/g, '\\r').replace(/\n/g, '\\n');
+
+        s = codeArr[1] + '"' + s + '"' + codeArr[2];
+
+        return s + '\n';
+    }
+
+    function _js(s) {
+        if (/^=/.test(s)) {
+            s = codeArr[1] + s.substring(1).replace(/[\s;]*$/, '') + codeArr[2];
+        }
+        dealWithVars(s);
+
+        return s + '\n';
+    }
+
+    function dealWithVars(s) {
+        s = s.replace(/\/\*.*?\*\/|'[^']*'|"[^"]*"|\.[\$\w]+/g, '');
+        var sArr = s.split(/[^\$\w\d]+/);
+        for (var i = 0, len = sArr.length; i < len; i++) {
+            var c = sArr[i];
+            if (!c || keyMap[c] || /^\d/.test(c)) {
+                continue;
+            }
+            if (!varsInTpl[c]) {
+                if (c === 'print') {
+                    vars += codeArr[4];
+                } else {
+                    vars += c + '=$data.hasOwnProperty("' + c + '")?$data.' + c + ':window.' + c + ',';
+                }
+                varsInTpl[c] = 1;
+            }
+        }
+    }
+
+    var cache = {};
+
+    return function (str, data) {
+        var fn = !/\W/.test(str) ? cache[str] || (cache[str] = _getCompileFn(document.getElementById(str).innerHTML)) : _getCompileFn(str);
+        return data ? fn(data) : fn;
+    };
+})();
+
+module.exports = compileTemplate;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var immutableLib = __webpack_require__(3);
+var pushOrUpdateList = __webpack_require__(26);
+var isImmutable = __webpack_require__(25);
 
 module.exports = {
     setImmutableLib: immutableLib.setImmutableLib,
@@ -509,34 +640,35 @@ module.exports = {
 };
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var AjaxUtils = __webpack_require__(8);
-var ArrayUtils = __webpack_require__(9);
-var CookieUtils = __webpack_require__(10);
-var EventBus = __webpack_require__(11);
-var formatDate = __webpack_require__(24);
-var formatDatePretty = __webpack_require__(25);
-var formatNumber = __webpack_require__(26);
-var getDeepValue = __webpack_require__(27);
-var getRandomNum = __webpack_require__(29);
-var getMediaWidthHeight = __webpack_require__(28);
-var isPromise = __webpack_require__(30);
-var JSXRenderUtils = __webpack_require__(12);
-var loadPromiseShim = __webpack_require__(31);
-var loadStaticUtils = __webpack_require__(3);
+var AjaxUtils = __webpack_require__(10);
+var ArrayUtils = __webpack_require__(11);
+var CookieUtils = __webpack_require__(12);
+var EventBus = __webpack_require__(13);
+var formatDate = __webpack_require__(27);
+var formatDatePretty = __webpack_require__(28);
+var formatNumber = __webpack_require__(29);
+var getDeepValue = __webpack_require__(30);
+var getRandomNum = __webpack_require__(32);
+var getMediaWidthHeight = __webpack_require__(31);
+var JSXRenderUtils = __webpack_require__(14);
+var loadPromiseShim = __webpack_require__(33);
+var loadStaticUtils = __webpack_require__(4);
 var miniUnderscore = __webpack_require__(0);
-var onDomReady = __webpack_require__(32);
-var shallowEqual = __webpack_require__(4);
-var URLUtils = __webpack_require__(21);
-var StringUtils = __webpack_require__(14);
-var TaskQueueRunner = __webpack_require__(19);
-var TimeUtils = __webpack_require__(20);
-var ServiceUtils = __webpack_require__(13);
+var onDomReady = __webpack_require__(34);
+var shallowEqual = __webpack_require__(5);
+var URLUtils = __webpack_require__(24);
+var StringUtils = __webpack_require__(17);
+var TaskQueueRunner = __webpack_require__(22);
+var TimeUtils = __webpack_require__(23);
+var ServiceUtils = __webpack_require__(16);
+var ModuleUtils = __webpack_require__(15);
+var PromiseUtils = __webpack_require__(2);
 
 var exportObject = {};
 function mixin(exportObj) {
@@ -552,6 +684,8 @@ mixin(loadStaticUtils);
 mixin(miniUnderscore);
 mixin(TimeUtils);
 mixin(ServiceUtils);
+mixin(ModuleUtils);
+mixin(PromiseUtils);
 
 mixin({
     EventBus: EventBus,
@@ -562,7 +696,6 @@ mixin({
     getDeepValue: getDeepValue,
     getRandomNum: getRandomNum,
     getMediaWidthHeight: getMediaWidthHeight,
-    isPromise: isPromise,
     loadPromiseShim: loadPromiseShim,
     onDomReady: onDomReady,
     shallowEqual: shallowEqual,
@@ -573,11 +706,13 @@ mixin({
 module.exports = exportObject;
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+
+var PromiseUtils = __webpack_require__(2);
 
 function sendXmlHttpRequest(method, url, data, contentType, responseType) {
 
@@ -625,8 +760,14 @@ function jsonParseResponseText(responseText) {
     return JSON.parse(responseText);
 }
 
-function sendGetRequest(url) {
-    return sendXmlHttpRequest("GET", url);
+function sendGetRequest(url, cacheSecond) {
+    if (!cacheSecond) {
+        return sendXmlHttpRequest("GET", url);
+    }
+
+    return PromiseUtils.getCacheOrCreatePromise("get:" + url, cacheSecond, function () {
+        return sendXmlHttpRequest("GET", url);
+    });
 }
 
 function sendGetJSONRequest(url, cacheSecond) {
@@ -690,7 +831,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -711,7 +852,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -771,7 +912,7 @@ var CookieUtils = {
 module.exports = CookieUtils;
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -831,7 +972,7 @@ EventBusClassPrototype.emit = function (eventName, m1, m2, m3, m4, m5) {
 module.exports = EventBusClass;
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -885,7 +1026,50 @@ module.exports = {
 };
 
 /***/ }),
-/* 13 */
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var defineModuleMap = {};
+var defineModuleFactoryMap = {};
+var defineModuleBuildingMap = {};
+
+function defineModule(name, factory) {
+    defineModuleFactoryMap[name] = factory;
+}
+
+function requireModule(name) {
+    var m = defineModuleMap[name];
+    if (m) {
+        return m;
+    }
+
+    var factory = defineModuleFactoryMap[name];
+    if (!factory) {
+        throw new Error("[ERROR] module is not exist : " + name);
+    }
+
+    if (defineModuleBuildingMap[name]) {
+        throw new Error("[ERROR] module is circular reference : " + name);
+    }
+
+    defineModuleBuildingMap[name] = true;
+    m = factory() || "return void";
+    defineModuleBuildingMap[name] = false;
+
+    defineModuleMap[name] = m;
+    return m;
+}
+
+module.exports = {
+    defineModule: defineModule,
+    requireModule: requireModule
+};
+
+/***/ }),
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -977,16 +1161,16 @@ module.exports = {
 };
 
 /***/ }),
-/* 14 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var camelCase = __webpack_require__(15);
-var deCamelCase = __webpack_require__(16);
-var slash = __webpack_require__(17);
-var upFirstChar = __webpack_require__(18);
+var camelCase = __webpack_require__(18);
+var deCamelCase = __webpack_require__(19);
+var slash = __webpack_require__(20);
+var upFirstChar = __webpack_require__(21);
 
 function trim(str) {
     return str.replace(/^\s*|\s*$/g, '');
@@ -1019,7 +1203,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 15 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1052,7 +1236,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 16 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1074,7 +1258,7 @@ function fromCamelCase(string, join) {
 module.exports = fromCamelCase;
 
 /***/ }),
-/* 17 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1138,7 +1322,7 @@ module.exports = function (str) {
 // MIT © [Sindre Sorhus](http://sindresorhus.com)
 
 /***/ }),
-/* 18 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1154,7 +1338,7 @@ function upFirstChar(str) {
 module.exports = upFirstChar;
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1240,7 +1424,7 @@ TaskQueueRunnerPrototype.stop = function () {
 module.exports = TaskQueueRunner;
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1307,7 +1491,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1407,7 +1591,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 22 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1423,13 +1607,13 @@ function isImmutable(obj) {
 module.exports = isImmutable;
 
 /***/ }),
-/* 23 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var immutableLib = __webpack_require__(2);
+var immutableLib = __webpack_require__(3);
 
 /**
  * 合并两个List , 如果已经里面的元素已经存在则合并元素,如果里面的元素不存在则直接追加元素
@@ -1470,7 +1654,7 @@ function pushOrUpdateList(immutableOldList, addList, keyName, mergeFunction, cre
 module.exports = pushOrUpdateList;
 
 /***/ }),
-/* 24 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1516,7 +1700,7 @@ var formatDate = function formatDate(date, formatString) {
 module.exports = formatDate;
 
 /***/ }),
-/* 25 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1585,7 +1769,7 @@ function formatDatePretty(timeStr, nowTime0) {
 module.exports = formatDatePretty;
 
 /***/ }),
-/* 26 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1662,7 +1846,7 @@ var formatNumber = function formatNumber(num, pattern) {
 module.exports = formatNumber;
 
 /***/ }),
-/* 27 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1731,7 +1915,7 @@ function getValueInPath(obj, str) {
 module.exports = getValueInPath;
 
 /***/ }),
-/* 28 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1812,7 +1996,7 @@ module.exports = function getMediaSize(_x, _x2, _x3, _x4, _x5) {
 };
 
 /***/ }),
-/* 29 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1823,26 +2007,13 @@ module.exports = function getRandomNumber(min, max) {
 };
 
 /***/ }),
-/* 30 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-function isPromise(p) {
-    return p && typeof p.then === 'function' && typeof p['catch'] === 'function';
-}
-
-module.exports = isPromise;
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var loadStaticUtils = __webpack_require__(3);
+var loadStaticUtils = __webpack_require__(4);
 var loadStaticJS = loadStaticUtils.loadStaticJS;
 
 function loadShimES6Promise(callback) {
@@ -1859,7 +2030,7 @@ function loadShimES6Promise(callback) {
 module.exports = loadShimES6Promise;
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1910,19 +2081,22 @@ function onDomReady(callback) {
 module.exports = onDomReady;
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var exportObject = __webpack_require__(7);
-var ImmutableUtils = __webpack_require__(6);
-var CompareBeforeUtils = __webpack_require__(5);
+var exportObject = __webpack_require__(9);
+var ImmutableUtils = __webpack_require__(8);
+var CompareBeforeUtils = __webpack_require__(6);
+var compileTemplate = __webpack_require__(7);
 
 var mixin = exportObject['mixin'];
 mixin(ImmutableUtils);
 mixin(CompareBeforeUtils);
+
+exportObject['compileTemplate'] = compileTemplate;
 
 module.exports = exportObject;
 

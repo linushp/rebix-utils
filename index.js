@@ -8,7 +8,6 @@ var formatNumber = require('./formatNumber');
 var getDeepValue = require('./getDeepValue');
 var getRandomNum = require('./getRandomNum');
 var getMediaWidthHeight = require('./getMediaWidthHeight');
-var isPromise = require('./isPromise');
 var JSXRenderUtils = require('./JSXRenderUtils');
 var loadPromiseShim = require('./loadPromiseShim');
 var loadStaticUtils = require('./loadStaticUtils');
@@ -21,6 +20,7 @@ var TaskQueueRunner = require('./TaskQueueRunner');
 var TimeUtils = require('./TimeUtils');
 var ServiceUtils = require('./ServiceUtils');
 var ModuleUtils = require('./ModuleUtils');
+var PromiseUtils = require("./PromiseUtils");
 
 
 var exportObject = {};
@@ -38,6 +38,7 @@ mixin(miniUnderscore);
 mixin(TimeUtils);
 mixin(ServiceUtils);
 mixin(ModuleUtils);
+mixin(PromiseUtils);
 
 mixin({
     EventBus: EventBus,
@@ -48,7 +49,6 @@ mixin({
     getDeepValue: getDeepValue,
     getRandomNum: getRandomNum,
     getMediaWidthHeight: getMediaWidthHeight,
-    isPromise: isPromise,
     loadPromiseShim: loadPromiseShim,
     onDomReady: onDomReady,
     shallowEqual: shallowEqual,
