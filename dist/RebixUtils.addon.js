@@ -11,41 +11,41 @@
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -56,7 +56,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -65,15 +65,15 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 34);
+/******/ 	return __webpack_require__(__webpack_require__.s = 33);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -313,64 +313,6 @@ module.exports = warning;
 "use strict";
 
 
-var camelCase = __webpack_require__(16);
-var deCamelCase = __webpack_require__(17);
-var slash = __webpack_require__(18);
-var upFirstChar = __webpack_require__(3);
-
-function trim(str) {
-    return str.replace(/^\s*|\s*$/g, '');
-}
-
-function trimLeft(str) {
-    return str.replace(/^\s*/, '');
-}
-
-function trimRight(str) {
-    return str.replace(/\s*$/, '');
-}
-
-function startWith(str, prefix) {
-    str = "" + str;
-    return str.indexOf(prefix) === 0;
-}
-
-//AjaxUtils['$$EM$$'] = true;
-module.exports = {
-    trim: trim,
-    trimLeft: trimLeft,
-    trimRight: trimRight,
-    startWith: startWith,
-
-    camelCase: camelCase,
-    deCamelCase: deCamelCase,
-    slash: slash,
-    upFirstChar: upFirstChar
-};
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-//首字母大写
-
-
-function upFirstChar(str) {
-    return str.replace(/(^|\s+)\w/g, function (s) {
-        return s.toUpperCase();
-    });
-}
-
-module.exports = upFirstChar;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 var _immutableLib = null;
 
 /**
@@ -391,7 +333,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 5 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -471,7 +413,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 6 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -507,13 +449,13 @@ function shallowEqual(objA, objB) {
 module.exports = shallowEqual;
 
 /***/ }),
-/* 7 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var shallowEqual = __webpack_require__(6);
+var shallowEqual = __webpack_require__(4);
 
 var CONST_STORAGE = {};
 
@@ -549,13 +491,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 8 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var immutableLib = __webpack_require__(4);
+var immutableLib = __webpack_require__(2);
 var pushOrUpdateList = __webpack_require__(23);
 var isImmutable = __webpack_require__(22);
 
@@ -567,16 +509,16 @@ module.exports = {
 };
 
 /***/ }),
-/* 9 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var AjaxUtils = __webpack_require__(10);
-var ArrayUtils = __webpack_require__(11);
-var CookieUtils = __webpack_require__(12);
-var EventBus = __webpack_require__(13);
+var AjaxUtils = __webpack_require__(8);
+var ArrayUtils = __webpack_require__(9);
+var CookieUtils = __webpack_require__(10);
+var EventBus = __webpack_require__(11);
 var formatDate = __webpack_require__(24);
 var formatDatePretty = __webpack_require__(25);
 var formatNumber = __webpack_require__(26);
@@ -584,17 +526,17 @@ var getDeepValue = __webpack_require__(27);
 var getRandomNum = __webpack_require__(29);
 var getMediaWidthHeight = __webpack_require__(28);
 var isPromise = __webpack_require__(30);
-var JSXRenderUtils = __webpack_require__(14);
+var JSXRenderUtils = __webpack_require__(12);
 var loadPromiseShim = __webpack_require__(31);
-var loadStaticUtils = __webpack_require__(5);
+var loadStaticUtils = __webpack_require__(3);
 var miniUnderscore = __webpack_require__(0);
 var onDomReady = __webpack_require__(32);
-var shallowEqual = __webpack_require__(6);
+var shallowEqual = __webpack_require__(4);
 var URLUtils = __webpack_require__(21);
-var StringUtils = __webpack_require__(2);
+var StringUtils = __webpack_require__(14);
 var TaskQueueRunner = __webpack_require__(19);
 var TimeUtils = __webpack_require__(20);
-var ServiceUtils = __webpack_require__(15);
+var ServiceUtils = __webpack_require__(13);
 
 var exportObject = {};
 function mixin(exportObj) {
@@ -631,300 +573,124 @@ mixin({
 module.exports = exportObject;
 
 /***/ }),
-/* 10 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-//CopyFrom: https://github.com/naugtur/xhr
 
 
+function sendXmlHttpRequest(method, url, data, contentType, responseType) {
 
-var miniUnderscore = __webpack_require__(0);
-var parseHeaders = __webpack_require__(33);
-var upFirstChar = __webpack_require__(3);
-var isFunction = miniUnderscore.isFunction;
-var xtend = miniUnderscore.extend;
-
-function forEachArray(array, iterator) {
-    for (var i = 0; i < array.length; i++) {
-        iterator(array[i]);
-    }
-}
-
-function isEmpty(obj) {
-    for (var i in obj) {
-        if (obj.hasOwnProperty(i)) return false;
-    }
-    return true;
-}
-
-function initParams(uri, options, callback) {
-    var params = uri;
-
-    if (isFunction(options)) {
-        callback = options;
-        if (typeof uri === "string") {
-            params = { uri: uri };
-        }
-    } else {
-        params = xtend(options, { uri: uri });
-    }
-
-    params.callback = callback;
-    return params;
-}
-
-function _createXHR(options) {
-    if (typeof options.callback === "undefined") {
-        throw new Error("callback argument missing");
-    }
-
-    var called = false;
-    var callback = function cbOnce(err, response, body) {
-        if (!called) {
-            called = true;
-            options.callback(err, response, body);
-        }
-    };
-
-    function readystatechange() {
-        if (xhr.readyState === 4) {
-            setTimeout(loadFunc, 0);
-        }
-    }
-
-    function getBody() {
-        // Chrome with requestType=blob throws errors arround when even testing access to responseText
-        var body = null;
-
-        if (xhr.response) {
-            body = xhr.response;
-        } else {
-            body = xhr.responseText || getXml(xhr);
-        }
-
-        if (isJson) {
-            try {
-                body = JSON.parse(body);
-            } catch (e) {}
-        }
-
-        return body;
-    }
-
-    function errorFunc(evt) {
-        clearTimeout(timeoutTimer);
-        if (!(evt instanceof Error)) {
-            evt = new Error("" + (evt || "Unknown XMLHttpRequest Error"));
-        }
-        evt.statusCode = 0;
-        return callback(evt, failureResponse);
-    }
-
-    // will load the data & process the response in a special response object
-    function loadFunc() {
-        if (aborted) return;
-        var status;
-        clearTimeout(timeoutTimer);
-        if (options.useXDR && xhr.status === undefined) {
-            //IE8 CORS GET successful response doesn't have a status field, but body is fine
-            status = 200;
-        } else {
-            status = xhr.status === 1223 ? 204 : xhr.status;
-        }
-        var response = failureResponse;
-        var err = null;
-
-        if (status !== 0) {
-            response = {
-                body: getBody(),
-                statusCode: status,
-                method: method,
-                headers: {},
-                url: uri,
-                rawRequest: xhr
-            };
-            if (xhr.getAllResponseHeaders) {
-                //remember xhr can in fact be XDR for CORS in IE
-                response.headers = parseHeaders(xhr.getAllResponseHeaders());
-            }
-        } else {
-            err = new Error("Internal XMLHttpRequest Error");
-        }
-        return callback(err, response, response.body);
-    }
-
-    var xhr = options.xhr || null;
-
-    if (!xhr) {
-        if (options.cors || options.useXDR) {
-            xhr = new createXHR.XDomainRequest();
-        } else {
-            xhr = new createXHR.XMLHttpRequest();
-        }
-    }
-
-    var key;
-    var aborted;
-    var uri = xhr.url = options.uri || options.url;
-    var method = xhr.method = options.method || "GET";
-    var body = options.body || options.data;
-    var headers = xhr.headers = options.headers || {};
-    var sync = !!options.sync;
-    var isJson = false;
-    var timeoutTimer;
-    var failureResponse = {
-        body: undefined,
-        headers: {},
-        statusCode: 0,
-        method: method,
-        url: uri,
-        rawRequest: xhr
-    };
-
-    if ("json" in options && options.json !== false) {
-        isJson = true;
-        headers["accept"] || headers["Accept"] || (headers["Accept"] = "application/json"); //Don't override existing accept header declared by user
-        if (method !== "GET" && method !== "HEAD") {
-            headers["content-type"] || headers["Content-Type"] || (headers["Content-Type"] = "application/json"); //Don't override existing accept header declared by user
-            body = JSON.stringify(options.json === true ? body : options.json);
-        }
-    }
-
-    xhr.onreadystatechange = readystatechange;
-    xhr.onload = loadFunc;
-    xhr.onerror = errorFunc;
-    // IE9 must have onprogress be set to a unique function.
-    xhr.onprogress = function () {
-        // IE must die
-    };
-    xhr.onabort = function () {
-        aborted = true;
-    };
-    xhr.ontimeout = errorFunc;
-    xhr.open(method, uri, !sync, options.username, options.password);
-    //has to be after open
-    if (!sync) {
-        xhr.withCredentials = !!options.withCredentials;
-    }
-    // Cannot set timeout with sync request
-    // not setting timeout on the xhr object, because of old webkits etc. not handling that correctly
-    // both npm's request and jquery 1.x use this kind of timeout, so this is being consistent
-    if (!sync && options.timeout > 0) {
-        timeoutTimer = setTimeout(function () {
-            if (aborted) return;
-            aborted = true; //IE9 may still call readystatechange
-            xhr.abort("timeout");
-            var e = new Error("XMLHttpRequest timeout");
-            e.code = "ETIMEDOUT";
-            errorFunc(e);
-        }, options.timeout);
-    }
-
-    if (xhr.setRequestHeader) {
-        for (key in headers) {
-            if (headers.hasOwnProperty(key)) {
-                xhr.setRequestHeader(key, headers[key]);
-            }
-        }
-    } else if (options.headers && !isEmpty(options.headers)) {
-        throw new Error("Headers cannot be set on an XDomainRequest object");
-    }
-
-    if ("responseType" in options) {
-        xhr.responseType = options.responseType;
-    }
-
-    if ("beforeSend" in options && typeof options.beforeSend === "function") {
-        options.beforeSend(xhr);
-    }
-
-    // Microsoft Edge browser sends "undefined" when send is called with undefined value.
-    // XMLHttpRequest spec says to pass null as body to indicate no body
-    // See https://github.com/naugtur/xhr/issues/100.
-    xhr.send(body || null);
-
-    return xhr;
-}
-
-function getXml(xhr) {
-    if (xhr.responseType === "document") {
-        return xhr.responseXML;
-    }
-    var firefoxBugTakenEffect = xhr.responseXML && xhr.responseXML.documentElement.nodeName === "parsererror";
-    if (xhr.responseType === "" && !firefoxBugTakenEffect) {
-        return xhr.responseXML;
-    }
-
-    return null;
-}
-
-function noop() {}
-
-function createXHR(uri, options, callback) {
-    options = initParams(uri, options, callback);
-    return _createXHR(options);
-}
-
-createXHR.XMLHttpRequest = window.XMLHttpRequest || noop;
-createXHR.XDomainRequest = "withCredentials" in new createXHR.XMLHttpRequest() ? createXHR.XMLHttpRequest : window.XDomainRequest;
-
-var AjaxUtils = {};
-
-forEachArray(["get", "put", "post", "patch", "head", "delete"], function (method) {
-    //AjaxUtils.ajaxDel('/user',options,function(){});
-    //AjaxUtils.ajaxGet('/user',function(){});
-    //AjaxUtils.ajaxPost('/user',function(){});
-    var ajaxMethod = "ajax" + upFirstChar(method);
-
-    AjaxUtils[ajaxMethod] = function (uri, options, callback) {
-        options = initParams(uri, options, callback);
-        options.method = method.toUpperCase();
-        return _createXHR(options);
-    };
-});
-
-function sendRequest(options) {
     return new Promise(function (resolve, reject) {
-        options = options || {}; //保证options一定会存在
-        var uri = options.uri || options.url;
-        options = initParams(uri, options, function (err, resp, body) {
-            if (err) {
-                reject(err, resp, body);
-            } else {
-                resolve(resp, body);
+        var xhr = new XMLHttpRequest();
+        xhr.open(method, url, true);
+
+        //1.responseType
+        if (responseType) {
+            xhr.responseType = responseType;
+        } else {
+            xhr.responseType = 'text';
+        }
+
+        //2.contentType
+        var CONST_CONTENT_TYPE = 'Content-Type';
+        if (contentType === 'form') {
+            xhr.setRequestHeader(CONST_CONTENT_TYPE, "application/x-www-form-urlencoded");
+        }
+        if (contentType === 'json') {
+            xhr.setRequestHeader(CONST_CONTENT_TYPE, "application/json;charset=UTF-8");
+        }
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status >= 200 && xhr.status < 300 || xhr.status == 304) {
+                    var responseText = xhr.responseText;
+                    resolve(responseText);
+                } else {
+                    reject(xhr.status);
+                }
             }
-        });
-        options.method = method.toUpperCase();
-        return _createXHR(options);
+        };
+
+        //3.data
+        if (data) {
+            xhr.send(data);
+        } else {
+            xhr.send();
+        }
     });
 }
 
-forEachArray(["get", "put", "post", "patch", "head", "delete"], function (method) {
+function jsonParseResponseText(responseText) {
+    return JSON.parse(responseText);
+}
 
-    var methodPromise = "send" + upFirstChar(method) + "Request";
-    //AjaxUtil.sendGetRequest('/user/31').then(function(){});
-    //AjaxUtil.sendPostRequest('/user/31',{json:{name:'hello'}}).then(function(){});
-    //AjaxUtil.sendPutRequest('/user/31',{json:{name:'hello'}}).then(function(){});
-    //AjaxUtil.sendDeleteRequest('/user/31').then(function(){});
-    //AjaxUtil.sendPatchRequest('/user/31').then(function(){});
-    //AjaxUtil.sendHeadRequest('/user/31').then(function(){});
+function sendGetRequest(url) {
+    return sendXmlHttpRequest("GET", url);
+}
 
-    AjaxUtils[methodPromise] = function (uri, options) {
-        options = options || {}; //保证options一定会存在
-        options.uri = uri;
-        return sendRequest(options);
-    };
-});
+function sendGetJSONRequest(url, cacheSecond) {
+    return sendGetRequest(url, cacheSecond).then(jsonParseResponseText);
+}
 
-AjaxUtils.ajax = _createXHR;
-AjaxUtils.createXHR = createXHR;
-AjaxUtils.sendRequest = sendRequest;
+function sendPostRequest(url, data, contentType) {
+    return sendXmlHttpRequest("POST", url, data, contentType);
+}
 
-module.exports = AjaxUtils;
+function sendPostJSONRequest(url, data) {
+    var dataStr = JSON.stringify(data);
+    return sendPostRequest(url, dataStr, 'json').then(jsonParseResponseText);
+}
+
+function sendPostFormRequest(url, data) {
+    return sendPostRequest(url, data, 'form');
+}
+
+function sendPostFormRequest2(url, data) {
+    return sendPostRequest(url, data, 'form').then(jsonParseResponseText);
+}
+
+function toQueryStringPush(isEncode, arrs, key, value) {
+    if (value !== undefined && value !== "" && value !== null) {
+        if (isEncode) {
+            arrs.push(key + "=" + encodeURIComponent(value));
+        } else {
+            arrs.push(key + "=" + value);
+        }
+    }
+}
+
+function toQueryString(obj, isEncode) {
+    var arrs = [];
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            var value = obj[key];
+            if (Object.prototype.toString.call(value) === '[object Array]') {
+                for (var i = 0; i < value.length; i++) {
+                    var obj1 = value[i];
+                    toQueryStringPush(isEncode, arrs, key, obj1);
+                }
+            } else {
+                toQueryStringPush(isEncode, arrs, key, value);
+            }
+        }
+    }
+    return arrs.join("&");
+}
+
+module.exports = {
+    sendXmlHttpRequest: sendXmlHttpRequest,
+    sendGetRequest: sendGetRequest,
+    sendGetJSONRequest: sendGetJSONRequest,
+    sendPostRequest: sendPostRequest,
+    sendPostFormRequest: sendPostFormRequest,
+    sendPostFormRequest2: sendPostFormRequest2,
+    sendPostJSONRequest: sendPostJSONRequest,
+    toQueryString: toQueryString
+};
 
 /***/ }),
-/* 11 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -945,7 +711,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1005,7 +771,7 @@ var CookieUtils = {
 module.exports = CookieUtils;
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1065,7 +831,7 @@ EventBusClassPrototype.emit = function (eventName, m1, m2, m3, m4, m5) {
 module.exports = EventBusClass;
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1119,7 +885,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1211,7 +977,49 @@ module.exports = {
 };
 
 /***/ }),
-/* 16 */
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var camelCase = __webpack_require__(15);
+var deCamelCase = __webpack_require__(16);
+var slash = __webpack_require__(17);
+var upFirstChar = __webpack_require__(18);
+
+function trim(str) {
+    return str.replace(/^\s*|\s*$/g, '');
+}
+
+function trimLeft(str) {
+    return str.replace(/^\s*/, '');
+}
+
+function trimRight(str) {
+    return str.replace(/\s*$/, '');
+}
+
+function startWith(str, prefix) {
+    str = "" + str;
+    return str.indexOf(prefix) === 0;
+}
+
+//AjaxUtils['$$EM$$'] = true;
+module.exports = {
+    trim: trim,
+    trimLeft: trimLeft,
+    trimRight: trimRight,
+    startWith: startWith,
+
+    camelCase: camelCase,
+    deCamelCase: deCamelCase,
+    slash: slash,
+    upFirstChar: upFirstChar
+};
+
+/***/ }),
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1244,7 +1052,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1266,7 +1074,7 @@ function fromCamelCase(string, join) {
 module.exports = fromCamelCase;
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1328,6 +1136,22 @@ module.exports = function (str) {
 // ## License
 //
 // MIT © [Sindre Sorhus](http://sindresorhus.com)
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+//首字母大写
+
+
+function upFirstChar(str) {
+    return str.replace(/(^|\s+)\w/g, function (s) {
+        return s.toUpperCase();
+    });
+}
+
+module.exports = upFirstChar;
 
 /***/ }),
 /* 19 */
@@ -1605,7 +1429,7 @@ module.exports = isImmutable;
 "use strict";
 
 
-var immutableLib = __webpack_require__(4);
+var immutableLib = __webpack_require__(2);
 
 /**
  * 合并两个List , 如果已经里面的元素已经存在则合并元素,如果里面的元素不存在则直接追加元素
@@ -1921,15 +1745,26 @@ module.exports = getValueInPath;
  */
 
 
-module.exports = function getMediaSize(_x, _x2, _x3, _x4) {
+module.exports = function getMediaSize(_x, _x2, _x3, _x4, _x5) {
     var _again = true;
 
     _function: while (_again) {
         var maxWidth = _x,
             maxHeight = _x2,
             sWidth = _x3,
-            sHeight = _x4;
+            sHeight = _x4,
+            loopCount = _x5;
         _again = false;
+
+        if (!loopCount) {
+            loopCount = 0;
+        }
+
+        if (loopCount > 2) {
+            //防止死循环
+            console.log("[ERROR]getMediaSize");
+            return { width: sWidth, height: sHeight };
+        }
 
         var width = 100;
         var height = 100;
@@ -1963,6 +1798,7 @@ module.exports = function getMediaSize(_x, _x2, _x3, _x4) {
             _x2 = maxHeight;
             _x3 = width;
             _x4 = height;
+            _x5 = loopCount + 1;
             _again = true;
             width = height = scale = undefined;
             continue _function;
@@ -2006,7 +1842,7 @@ module.exports = isPromise;
 "use strict";
 
 
-var loadStaticUtils = __webpack_require__(5);
+var loadStaticUtils = __webpack_require__(3);
 var loadStaticJS = loadStaticUtils.loadStaticJS;
 
 function loadShimES6Promise(callback) {
@@ -2080,45 +1916,9 @@ module.exports = onDomReady;
 "use strict";
 
 
-var miniUnderscore = __webpack_require__(0);
-var StringTrims = __webpack_require__(2);
-
-var trim = StringTrims.trim;
-var forEach = miniUnderscore.each;
-var isArray = miniUnderscore.isArray;
-
-module.exports = function (headers) {
-    if (!headers) return {};
-
-    var result = {};
-
-    forEach(trim(headers).split('\n'), function (row) {
-        var index = row.indexOf(':'),
-            key = trim(row.slice(0, index)).toLowerCase(),
-            value = trim(row.slice(index + 1));
-
-        if (typeof result[key] === 'undefined') {
-            result[key] = value;
-        } else if (isArray(result[key])) {
-            result[key].push(value);
-        } else {
-            result[key] = [result[key], value];
-        }
-    });
-
-    return result;
-};
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var exportObject = __webpack_require__(9);
-var ImmutableUtils = __webpack_require__(8);
-var CompareBeforeUtils = __webpack_require__(7);
+var exportObject = __webpack_require__(7);
+var ImmutableUtils = __webpack_require__(6);
+var CompareBeforeUtils = __webpack_require__(5);
 
 var mixin = exportObject['mixin'];
 mixin(ImmutableUtils);
