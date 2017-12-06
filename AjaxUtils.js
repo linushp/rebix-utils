@@ -32,7 +32,7 @@ function sendXmlHttpRequest(method, url, data, contentType, responseType) {
                     var responseText = xhr.responseText;
                     resolve(responseText);
                 } else {
-                    reject(xhr.status);
+                    reject(xhr.status,xhr);
                 }
             }
         };
