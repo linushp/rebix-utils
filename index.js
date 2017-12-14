@@ -5,6 +5,7 @@ var EventBus = require('./EventBus');
 var formatDate = require('./formatDate');
 var formatDatePretty = require('./formatDatePretty');
 var formatNumber = require('./formatNumber');
+var formatTimeLeft = require('./formatTimeLeft');
 var getDeepValue = require('./getDeepValue');
 var getRandomNum = require('./getRandomNum');
 var getMediaWidthHeight = require('./getMediaWidthHeight');
@@ -21,12 +22,14 @@ var TimeUtils = require('./TimeUtils');
 var ServiceUtils = require('./ServiceUtils');
 var ModuleUtils = require('./ModuleUtils');
 var PromiseUtils = require("./PromiseUtils");
+var MessageUtils = require("./MessageUtils");
 
 
 var exportObject = {};
 function mixin(exportObj) {
     miniUnderscore.assignObject(exportObject, exportObj);
 }
+
 
 mixin(AjaxUtils);
 mixin(ArrayUtils);
@@ -39,6 +42,8 @@ mixin(TimeUtils);
 mixin(ServiceUtils);
 mixin(ModuleUtils);
 mixin(PromiseUtils);
+mixin(MessageUtils);
+
 
 mixin({
     EventBus: EventBus,
@@ -46,6 +51,7 @@ mixin({
     formatDate: formatDate,
     formatDatePretty: formatDatePretty,
     formatNumber: formatNumber,
+    formatTimeLeft:formatTimeLeft,
     getDeepValue: getDeepValue,
     getRandomNum: getRandomNum,
     getMediaWidthHeight: getMediaWidthHeight,

@@ -31,7 +31,7 @@ function sendXmlHttpRequest(method, url, data, contentType, responseType) {
                 if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
                     var responseText = xhr.responseText;
                     resolve(responseText);
-                } else {
+                }else {
                     reject(xhr.status,xhr);
                 }
             }

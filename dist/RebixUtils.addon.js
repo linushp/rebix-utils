@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 35);
+/******/ 	return __webpack_require__(__webpack_require__.s = 37);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -629,8 +629,8 @@ module.exports = compileTemplate;
 
 
 var immutableLib = __webpack_require__(3);
-var pushOrUpdateList = __webpack_require__(26);
-var isImmutable = __webpack_require__(25);
+var pushOrUpdateList = __webpack_require__(27);
+var isImmutable = __webpack_require__(26);
 
 module.exports = {
     setImmutableLib: immutableLib.setImmutableLib,
@@ -650,25 +650,27 @@ var AjaxUtils = __webpack_require__(10);
 var ArrayUtils = __webpack_require__(11);
 var CookieUtils = __webpack_require__(12);
 var EventBus = __webpack_require__(13);
-var formatDate = __webpack_require__(27);
-var formatDatePretty = __webpack_require__(28);
-var formatNumber = __webpack_require__(29);
-var getDeepValue = __webpack_require__(30);
-var getRandomNum = __webpack_require__(32);
-var getMediaWidthHeight = __webpack_require__(31);
+var formatDate = __webpack_require__(28);
+var formatDatePretty = __webpack_require__(29);
+var formatNumber = __webpack_require__(30);
+var formatTimeLeft = __webpack_require__(31);
+var getDeepValue = __webpack_require__(32);
+var getRandomNum = __webpack_require__(34);
+var getMediaWidthHeight = __webpack_require__(33);
 var JSXRenderUtils = __webpack_require__(14);
-var loadPromiseShim = __webpack_require__(33);
+var loadPromiseShim = __webpack_require__(35);
 var loadStaticUtils = __webpack_require__(4);
 var miniUnderscore = __webpack_require__(0);
-var onDomReady = __webpack_require__(34);
+var onDomReady = __webpack_require__(36);
 var shallowEqual = __webpack_require__(5);
-var URLUtils = __webpack_require__(24);
-var StringUtils = __webpack_require__(17);
-var TaskQueueRunner = __webpack_require__(22);
-var TimeUtils = __webpack_require__(23);
-var ServiceUtils = __webpack_require__(16);
-var ModuleUtils = __webpack_require__(15);
+var URLUtils = __webpack_require__(25);
+var StringUtils = __webpack_require__(18);
+var TaskQueueRunner = __webpack_require__(23);
+var TimeUtils = __webpack_require__(24);
+var ServiceUtils = __webpack_require__(17);
+var ModuleUtils = __webpack_require__(16);
 var PromiseUtils = __webpack_require__(2);
+var MessageUtils = __webpack_require__(15);
 
 var exportObject = {};
 function mixin(exportObj) {
@@ -686,6 +688,7 @@ mixin(TimeUtils);
 mixin(ServiceUtils);
 mixin(ModuleUtils);
 mixin(PromiseUtils);
+mixin(MessageUtils);
 
 mixin({
     EventBus: EventBus,
@@ -693,6 +696,7 @@ mixin({
     formatDate: formatDate,
     formatDatePretty: formatDatePretty,
     formatNumber: formatNumber,
+    formatTimeLeft: formatTimeLeft,
     getDeepValue: getDeepValue,
     getRandomNum: getRandomNum,
     getMediaWidthHeight: getMediaWidthHeight,
@@ -742,7 +746,7 @@ function sendXmlHttpRequest(method, url, data, contentType, responseType) {
                     var responseText = xhr.responseText;
                     resolve(responseText);
                 } else {
-                    reject(xhr.status);
+                    reject(xhr.status, xhr);
                 }
             }
         };
@@ -1032,6 +1036,34 @@ module.exports = {
 "use strict";
 
 
+function showMessage(msg) {
+    var $soso_message = document.getElementById("rebix_utils_alert_message");
+    if (!$soso_message) {
+        var node = document.createElement("div");
+        node.setAttribute('id', "rebix_utils_alert_message");
+        node.setAttribute('style', "" + "position: fixed;" + "width: 200px;" + "height: 40px;" + "top:40%;" + "left:50%;" + "margin:-40px 0 0 -100px;" + "color:#FFF;" + "background:#AAA;" + "z-index:1000;" + "border-radius:7px;" + "text-align:center;" + "line-height:40px;");
+        document.body.appendChild(node);
+        $soso_message = node;
+    }
+
+    $soso_message.innerHTML = msg;
+    $soso_message.style.display = 'block';
+    setTimeout(function () {
+        $soso_message.style.display = 'none';
+    }, 5000);
+}
+
+module.exports = {
+    showMessage: showMessage
+};
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var defineModuleMap = {};
 var defineModuleFactoryMap = {};
 var defineModuleBuildingMap = {};
@@ -1069,7 +1101,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1161,16 +1193,16 @@ module.exports = {
 };
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var camelCase = __webpack_require__(18);
-var deCamelCase = __webpack_require__(19);
-var slash = __webpack_require__(20);
-var upFirstChar = __webpack_require__(21);
+var camelCase = __webpack_require__(19);
+var deCamelCase = __webpack_require__(20);
+var slash = __webpack_require__(21);
+var upFirstChar = __webpack_require__(22);
 
 function trim(str) {
     return str.replace(/^\s*|\s*$/g, '');
@@ -1203,7 +1235,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1236,7 +1268,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1258,7 +1290,7 @@ function fromCamelCase(string, join) {
 module.exports = fromCamelCase;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1322,7 +1354,7 @@ module.exports = function (str) {
 // MIT © [Sindre Sorhus](http://sindresorhus.com)
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1338,7 +1370,7 @@ function upFirstChar(str) {
 module.exports = upFirstChar;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1424,7 +1456,7 @@ TaskQueueRunnerPrototype.stop = function () {
 module.exports = TaskQueueRunner;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1491,7 +1523,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1591,7 +1623,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1607,7 +1639,7 @@ function isImmutable(obj) {
 module.exports = isImmutable;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1654,7 +1686,7 @@ function pushOrUpdateList(immutableOldList, addList, keyName, mergeFunction, cre
 module.exports = pushOrUpdateList;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1700,7 +1732,7 @@ var formatDate = function formatDate(date, formatString) {
 module.exports = formatDate;
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1769,7 +1801,7 @@ function formatDatePretty(timeStr, nowTime0) {
 module.exports = formatDatePretty;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1846,7 +1878,29 @@ var formatNumber = function formatNumber(num, pattern) {
 module.exports = formatNumber;
 
 /***/ }),
-/* 30 */
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function formatTimeLeft(times) {
+    if (times <= 0) {
+        return " 0 天 0 小时 0 分钟 ";
+    }
+    var day_times = 1000 * 60 * 60 * 24;
+    var hours_times = 1000 * 60 * 60;
+    var minutes_times = 1000 * 60;
+    var days = parseInt(times / day_times);
+    var hours = parseInt((times - days * day_times) / hours_times);
+    var minutes = parseInt((times - days * day_times - hours * hours_times) / minutes_times);
+    return days + " 天 " + hours + " 小时 " + minutes + " 分钟";
+}
+
+module.exports = formatTimeLeft;
+
+/***/ }),
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1915,7 +1969,7 @@ function getValueInPath(obj, str) {
 module.exports = getValueInPath;
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1996,7 +2050,7 @@ module.exports = function getMediaSize(_x, _x2, _x3, _x4, _x5) {
 };
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2007,7 +2061,7 @@ module.exports = function getRandomNumber(min, max) {
 };
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2030,7 +2084,7 @@ function loadShimES6Promise(callback) {
 module.exports = loadShimES6Promise;
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2081,7 +2135,7 @@ function onDomReady(callback) {
 module.exports = onDomReady;
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
