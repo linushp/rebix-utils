@@ -1,16 +1,23 @@
+
+var onDomReady_callbackCalled = false;
+
+
 function onDomReady(callback) {
+
+    if(onDomReady_callbackCalled){
+        callback();
+        return;
+    }
 
     var document = window.document;
 
-    var callbackCalled = false;
-
     function DOMContentLoaded() {
         //保证只会被调用一次
-        if (!callbackCalled) {
+        if (!onDomReady_callbackCalled) {
             setTimeout(function () {
                 callback();
+                onDomReady_callbackCalled = true;
             }, 2);
-            callbackCalled = true;
         }
     }
 

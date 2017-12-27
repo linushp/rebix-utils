@@ -1,5 +1,11 @@
-var getElementsByTagName = document.getElementsByTagName;
-var createElement = document.createElement;
+
+var getElementsByTagName = function(a){
+    return document.getElementsByTagName(a);
+};
+
+var createElement = function(a){
+    return document.createElement(a);
+};
 
 var loadStaticCache = {};
 
