@@ -1,4 +1,7 @@
-var domainPrefix = window.location.host;
+
+function getDomainPrefix() {
+    return window.location.host;
+}
 
 var CookieUtils = {
 
@@ -18,7 +21,7 @@ var CookieUtils = {
             var expire = new Date();
             expire.setTime(today.getTime() + 3600000 * hour);
         }
-        window.document.cookie = name + "=" + value + "; " + (hour ? ("expires=" + expire.toGMTString() + "; ") : "") + (path ? ("path=" + path + "; ") : "path=/; ") + (domain ? ("domain=" + domain + ";") : ("domain=" + domainPrefix + ";"));
+        window.document.cookie = name + "=" + value + "; " + (hour ? ("expires=" + expire.toGMTString() + "; ") : "") + (path ? ("path=" + path + "; ") : "path=/; ") + (domain ? ("domain=" + domain + ";") : ("domain=" + getDomainPrefix() + ";"));
         return true;
     },
 
@@ -45,7 +48,7 @@ var CookieUtils = {
      * @param {String} path 所在路径
      */
     remove: function (name, domain, path) {
-        window.document.cookie = name + "=; expires=Mon, 26 Jul 1997 05:00:00 GMT; " + (path ? ("path=" + path + "; ") : "path=/; ") + (domain ? ("domain=" + domain + ";") : ("domain=" + domainPrefix + ";"));
+        window.document.cookie = name + "=; expires=Mon, 26 Jul 1997 05:00:00 GMT; " + (path ? ("path=" + path + "; ") : "path=/; ") + (domain ? ("domain=" + domain + ";") : ("domain=" + getDomainPrefix() + ";"));
     }
 };
 
