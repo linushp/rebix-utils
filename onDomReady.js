@@ -20,7 +20,9 @@ var DOMReadyUtil = {
 
     onDomReady: function (fn) {
 
-        DOMReadyUtil.readyCallbacks.push(fn);
+        if (fn) {
+            DOMReadyUtil.readyCallbacks.push(fn);
+        }
 
         if (DOMReadyUtil.isReady) {
             while (DOMReadyUtil.readyCallbacks.length) {
