@@ -87,6 +87,28 @@ function toQueryString(obj) {
     return mm.join('&');
 }
 
+ function toQueryString2(queries) {
+        var arr = [];
+        for (var k in queries) {
+            if (queries.hasOwnProperty(k)) {
+                var v = queries[k];
+                arr.push(k + "=" + v);
+            }
+        }
+        return arr.join('&');
+    }
+
+ function toQueryString3(queries) {
+        var arr = [];
+        for (var k in queries) {
+            if (queries.hasOwnProperty(k)) {
+                var v = queries[k];
+                arr.push(k + "=" + encodeURIComponent(v));
+            }
+        }
+        return arr.join('&');
+    }
+
 module.exports = {
     parseURL: parseURL,
     getQueryParam: getQueryParam,
